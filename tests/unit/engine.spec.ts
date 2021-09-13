@@ -72,9 +72,9 @@ describe('Engine', () => {
   it('should properly load circuit from valid definition', () => {
     const engine = new Engine()
 
-    engine.registerDeviceConstructor(And)
-    engine.registerDeviceConstructor(Or)
-    engine.registerDeviceConstructor(Not)
+    engine.registerDeviceConstructor(And, 'And')
+    engine.registerDeviceConstructor(Or, 'Or')
+    engine.registerDeviceConstructor(Not, 'Not')
 
     // A && B || C && !D
     engine.loadDefinition({

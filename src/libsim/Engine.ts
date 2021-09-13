@@ -81,9 +81,7 @@ export class Engine {
     return this.pinsLinksInverted.get(pin)?.getSignal()
   }
 
-  registerDeviceConstructor (deviceConstructor: DeviceConstructor): void {
-    const name = deviceConstructor.name
-
+  registerDeviceConstructor (deviceConstructor: DeviceConstructor, name: string): void {
     if (this.devicesConstructors.has(name)) {
       throw new ConfigurationError(`Duplicate device constructor name ${name} specified`)
     }

@@ -214,9 +214,9 @@ export default Vue.extend({
   methods: {
     loadDefinition (): void {
       const engine = (this.$options as CustomThis$Options).engine = new Engine()
-      engine.registerDeviceConstructor(And)
-      engine.registerDeviceConstructor(Or)
-      engine.registerDeviceConstructor(Not)
+      engine.registerDeviceConstructor(And, 'And')
+      engine.registerDeviceConstructor(Or, 'Or')
+      engine.registerDeviceConstructor(Not, 'Not')
 
       const def = parseDefinitionString(this.definition)
       engine.loadDefinition(def)
