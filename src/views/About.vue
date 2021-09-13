@@ -1,5 +1,19 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="wrapper">
+    Project description goes here…
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'About'
+}
+</script>
+
+<style scoped>
+  .wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>

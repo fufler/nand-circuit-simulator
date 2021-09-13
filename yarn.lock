@@ -1029,6 +1029,18 @@
   dependencies:
     "@types/node" "*"
 
+"@types/cytoscape-dagre@^2.3.0":
+  version "2.3.0"
+  resolved "http://verdaccio.lavr.io/@types%2fcytoscape-dagre/-/cytoscape-dagre-2.3.0.tgz#e9193f710f47472bed9c80430ca0d6cb98cf1620"
+  integrity sha512-1WwDnCcdySVwhxhHWHxRFlWoz7InlXlA9O9gQjtBkk1Sf7hW0+uaRxS6nr1TLBSPZRX0QNpYGvGqh13NuFEDaA==
+  dependencies:
+    "@types/cytoscape" "*"
+
+"@types/cytoscape@*", "@types/cytoscape@^3.14.17":
+  version "3.14.17"
+  resolved "http://verdaccio.lavr.io/@types%2fcytoscape/-/cytoscape-3.14.17.tgz#20eaa183e8b0509d6d38e80600e9ff25d70f607b"
+  integrity sha512-0s/bNVEgaxNDh9xZvke1vg7eZcPPM8UuBIuks0/tOjMTRnL4F1b7/yNaVCNY3gXpIWStaqH31k1CI7cyeP9Wkw==
+
 "@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.17.18":
   version "4.17.24"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.24.tgz#ea41f93bf7e0d59cd5a76665068ed6aab6815c07"
@@ -1147,6 +1159,11 @@
   integrity sha512-O3MmRAk6ZuAKa9CHgg0Pr0+lUOqoMLpc9AS4R8ano2auvsg7IE8syF3Xh/NPr26TWklxYcqoEEFdzLLs1fV9PQ==
   dependencies:
     source-map "^0.6.1"
+
+"@types/uuid@^8.3.1":
+  version "8.3.1"
+  resolved "http://verdaccio.lavr.io/@types%2fuuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
+  integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
 
 "@types/webpack-dev-server@^3.11.0":
   version "3.11.6"
@@ -3031,6 +3048,13 @@ core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
+cose-base@^1.0.0:
+  version "1.0.3"
+  resolved "http://verdaccio.lavr.io/cose-base/-/cose-base-1.0.3.tgz#650334b41b869578a543358b80cda7e0abe0a60a"
+  integrity sha512-s9whTXInMSgAp/NVXVNuVxVKzGH2qck3aQlVHxDCdAEPgtMKwc4Wq6/QKhgdEdgbLSi9rBTAcPoRa6JpiG4ksg==
+  dependencies:
+    layout-base "^1.0.0"
+
 cosmiconfig@^5.0.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-5.2.1.tgz#040f726809c591e77a17c0a3626ca45b4f168b1a"
@@ -3314,6 +3338,36 @@ cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
+
+cytoscape-cose-bilkent@^4.1.0:
+  version "4.1.0"
+  resolved "http://verdaccio.lavr.io/cytoscape-cose-bilkent/-/cytoscape-cose-bilkent-4.1.0.tgz#762fa121df9930ffeb51a495d87917c570ac209b"
+  integrity sha512-wgQlVIUJF13Quxiv5e1gstZ08rnZj2XaLHGoFMYXz7SkNfCDOOteKBE6SYRfA9WxxI/iBc3ajfDoc6hb/MRAHQ==
+  dependencies:
+    cose-base "^1.0.0"
+
+cytoscape-dagre@^2.3.2:
+  version "2.3.2"
+  resolved "http://verdaccio.lavr.io/cytoscape-dagre/-/cytoscape-dagre-2.3.2.tgz#f83d4357642c86d3bd7530dd9c1dffc2e1079d3c"
+  integrity sha512-dL9+RvGkatSlIdOKXiFwHpnpTo8ydFMqIYzZFkImJXNbDci3feyYxR46wFoaG9GFiWimc6XD9Lm0x29b1wvWpw==
+  dependencies:
+    dagre "^0.8.5"
+
+cytoscape@^3.19.1:
+  version "3.19.1"
+  resolved "http://verdaccio.lavr.io/cytoscape/-/cytoscape-3.19.1.tgz#034fb5e5de7e6b9b7c948a48da8ab7037d430f69"
+  integrity sha512-fQSymoCzmDF5dejZqv94WXQUnI3cVZfaHWFQR+Q9RhJ6LzEs7dtkwgFYaoklsbXcrXz0uCGx4i3vQ0FiuOUu9Q==
+  dependencies:
+    heap "^0.2.6"
+    lodash.debounce "^4.0.8"
+
+dagre@^0.8.5:
+  version "0.8.5"
+  resolved "http://verdaccio.lavr.io/dagre/-/dagre-0.8.5.tgz#ba30b0055dac12b6c1fcc247817442777d06afee"
+  integrity sha512-/aTqmnRta7x7MCCpExk7HQL2O4owCT2h8NT//9I1OQ9vt29Pa0BzSAkR5lwFUcQ7491yVi/3CXU9jQ5o0Mn2Sw==
+  dependencies:
+    graphlib "^2.1.8"
+    lodash "^4.17.15"
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -3908,6 +3962,11 @@ eslint-module-utils@^2.6.2:
   dependencies:
     debug "^3.2.7"
     pkg-dir "^2.0.0"
+
+eslint-plugin-chai-friendly@^0.7.2:
+  version "0.7.2"
+  resolved "http://verdaccio.lavr.io/eslint-plugin-chai-friendly/-/eslint-plugin-chai-friendly-0.7.2.tgz#0ebfbb2c1244f5de2997f3963d155758234f2b0f"
+  integrity sha512-LOIfGx5sZZ5FwM1shr2GlYAWV9Omdi+1/3byuVagvQNoGUuU0iHhp7AfjA1uR+4dJ4Isfb4+FwBJgQajIw9iAg==
 
 eslint-plugin-es@^3.0.0:
   version "3.0.1"
@@ -4827,6 +4886,13 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
   integrity sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==
 
+graphlib@^2.1.8:
+  version "2.1.8"
+  resolved "http://verdaccio.lavr.io/graphlib/-/graphlib-2.1.8.tgz#5761d414737870084c92ec7b5dbcb0592c9d35da"
+  integrity sha512-jcLLfkpoVGmH7/InMC/1hIvOPSUh38oJtGhvrOFGzioE1DZ+0YW16RgmOJhHiuWTvGiJQ9Z1Ik43JvkRPRvE+A==
+  dependencies:
+    lodash "^4.17.15"
+
 growl@1.10.5:
   version "1.10.5"
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.10.5.tgz#f2735dc2283674fa67478b10181059355c369e5e"
@@ -4961,6 +5027,11 @@ he@1.2.0, he@1.2.x, he@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
+
+heap@^0.2.6:
+  version "0.2.6"
+  resolved "http://verdaccio.lavr.io/heap/-/heap-0.2.6.tgz#087e1f10b046932fc8594dd9e6d378afc9d1e5ac"
+  integrity sha1-CH4fELBGky/IWU3Z5tN4r8nR5aw=
 
 hex-color-regex@^1.1.0:
   version "1.1.0"
@@ -5922,6 +5993,11 @@ launch-editor@^2.2.1:
   dependencies:
     chalk "^2.3.0"
     shell-quote "^1.6.1"
+
+layout-base@^1.0.0:
+  version "1.0.2"
+  resolved "http://verdaccio.lavr.io/layout-base/-/layout-base-1.0.2.tgz#1291e296883c322a9dd4c5dd82063721b53e26e2"
+  integrity sha512-8h2oVEZNktL4BH2JCOI90iD1yXwL6iNW7KcCKT2QZgQJR2vbqDsldCTPRU9NifTCqHZci57XvQQ15YTu+sTYPg==
 
 levn@^0.3.0, levn@~0.3.0:
   version "0.3.0"
@@ -9333,6 +9409,11 @@ uuid@^3.3.2, uuid@^3.4.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
+uuid@^8.3.2:
+  version "8.3.2"
+  resolved "http://verdaccio.lavr.io/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
 v8-compile-cache@^2.0.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
@@ -9900,3 +9981,8 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+zod@^3.8.2:
+  version "3.8.2"
+  resolved "http://verdaccio.lavr.io/zod/-/zod-3.8.2.tgz#f25b78bc76e64f31318d242e301c23d3d610b7a1"
+  integrity sha512-kpwVRACazsOhELVt5h4R2pC2OndrqaBK4+z134TWOsnzn7n2uOYnSyvx0QAn410pl28CgVtkSi5ew7e/AgO0oA==
