@@ -20,7 +20,7 @@ module.exports = {
     'no-unused-expressions': 'off',
     'chai-friendly/no-unused-expressions': 'error',
     'no-use-before-define': 'off',
-    '@typescript-eslint/no-use-before-define': ['error', { 'typedefs': false }]
+    '@typescript-eslint/no-use-before-define': ['error', { typedefs: false }]
   },
   overrides: [
     {
