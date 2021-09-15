@@ -61,6 +61,10 @@ export interface Device2In {
   readonly inB: Pin
 }
 
+export interface Device3In extends Device2In{
+  readonly inC: Pin
+}
+
 export interface Device1Out {
   readonly out: Pin
 }
