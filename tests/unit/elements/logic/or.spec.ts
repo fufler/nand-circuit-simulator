@@ -1,10 +1,10 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
 import { Or } from '@/libsim/elements/logic/Or'
-import { make2In1OutSpec } from './utils'
+import { makeSpec, wrap2In1Out } from '../utils'
 
-make2In1OutSpec(
+makeSpec(
   'Or',
   (engine: Engine) => new Or(engine, 'or'),
-  (inputA, inputB) => inputA === Signal.HIGH || inputB === Signal.HIGH ? Signal.HIGH : Signal.LOW
+  wrap2In1Out((a, b) => a === Signal.HIGH || b === Signal.HIGH ? Signal.HIGH : Signal.LOW)
 )

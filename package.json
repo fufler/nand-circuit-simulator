@@ -11,12 +11,14 @@
     "deploy": "gh-pages -d dist-gh"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.172",
     "@types/uuid": "^8.3.1",
     "core-js": "^3.6.5",
     "cytoscape": "^3.19.1",
     "cytoscape-cose-bilkent": "^4.1.0",
     "cytoscape-dagre": "^2.3.2",
     "eslint-plugin-chai-friendly": "^0.7.2",
+    "lodash": "^4.17.21",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",

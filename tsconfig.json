@@ -16,7 +16,8 @@
       "webpack-env",
       "mocha",
       "chai",
-      "uuid"
+      "uuid",
+      "lodash"
     ],
     "paths": {
       "@/*": [

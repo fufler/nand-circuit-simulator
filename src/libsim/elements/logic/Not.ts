@@ -1,4 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
+import { CompoundDevice, Device, DevicePins, DevicePinType } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { Pin } from '@/libsim/Pins'
 import { Nand } from '@/libsim/elements/logic/Nand'
@@ -24,7 +24,10 @@ export class Not extends CompoundDevice {
       return [this.nand]
     }
 
-    getPins (): Array<Pin> {
-      return [this.in, this.out]
+    getPins (): DevicePins {
+      return [
+        [this.in, DevicePinType.INPUT],
+        [this.out, DevicePinType.OUTPUT]
+      ]
     }
 }

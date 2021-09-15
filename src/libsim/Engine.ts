@@ -61,6 +61,10 @@ export class Engine {
   }
 
   linkPins (src: Pin, dst: Pin): void {
+    if (src === dst) {
+      throw new LinkError('Self links are not allowed')
+    }
+
     if (this.pinsLinksInverted.has(dst)) {
       throw new LinkError(`There is a link already defined with dst ${dst.name}`)
     }
@@ -136,7 +140,7 @@ export class Engine {
       const devicePins = device.getPins()
       const pinName = pinId.substring(dotIndex + 1)
 
-      return devicePins.find(p => p.name === pinName) ?? throwError(InvalidArgumentError, `Pin with name ${pinName} not found in device ${deviceId}`)
+      return devicePins.map(p => p[0]).find(p => p.name === pinName) ?? throwError(InvalidArgumentError, `Pin with name ${pinName} not found in device ${deviceId}`)
     }
 
     for (const linkDef of definition.links) {

@@ -3,9 +3,9 @@ import { Pin, Signal, UpdatablePin } from '@/libsim/Pins'
 import { expect } from 'chai'
 import { And } from '@/libsim/elements/logic/And'
 import { Or } from '@/libsim/elements/logic/Or'
-import { SIGNALS2 } from './elements/logic/constants'
 import { Not } from '@/libsim/elements/logic/Not'
 import { CircuitDefinition } from '@/libsim/CircuitDefinition'
+import { makeSignals } from './elements/utils'
 
 describe('Engine', () => {
   it('should not allow duplicate links', () => {
@@ -18,6 +18,16 @@ describe('Engine', () => {
 
     expect(
       () => engine.linkPins(pinA, pinB)
+    ).to.throw(LinkError)
+  })
+
+  it('should not allow self links', () => {
+    const engine = new Engine()
+
+    const pin = new Pin(engine, 'a')
+
+    expect(
+      () => engine.linkPins(pin, pin)
     ).to.throw(LinkError)
   })
 
@@ -162,21 +172,19 @@ describe('Engine', () => {
     const srcD = allPins.find(p => p.name === 'srcD') as UpdatablePin
     const dst = allPins.find(p => p.name === 'dst') as Pin
 
-    for (const [inA, inB] of SIGNALS2) {
-      for (const [inC, inD] of SIGNALS2) {
-        const expectedResult = (inA === Signal.HIGH && inB === Signal.HIGH) || (inC === Signal.HIGH && inD === Signal.LOW)
-          ? Signal.HIGH
-          : Signal.LOW
+    for (const [inA, inB, inC, inD] of makeSignals(4)) {
+      const expectedResult = (inA === Signal.HIGH && inB === Signal.HIGH) || (inC === Signal.HIGH && inD === Signal.LOW)
+        ? Signal.HIGH
+        : Signal.LOW
 
-        srcA.setSignal(inA)
-        srcB.setSignal(inB)
-        srcC.setSignal(inC)
-        srcD.setSignal(inD)
+      srcA.setSignal(inA)
+      srcB.setSignal(inB)
+      srcC.setSignal(inC)
+      srcD.setSignal(inD)
 
-        engine.run()
+      engine.run()
 
-        expect(dst.getSignal()).to.be.equal(expectedResult)
-      }
+      expect(dst.getSignal()).to.be.equal(expectedResult)
     }
   })
 })
