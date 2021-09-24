@@ -41,6 +41,12 @@ export class Pin extends CircuitElement implements DevicePart {
     }
 }
 
+export class FalsePin extends Pin {
+  getSignal (): Signal {
+    return Signal.LOW
+  }
+}
+
 export class UpdatablePin extends Pin {
   setSignal (signal: Signal): void {
     if (signal === this.signal) { return }
