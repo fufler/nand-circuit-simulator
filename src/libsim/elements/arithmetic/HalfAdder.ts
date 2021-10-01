@@ -1,10 +1,10 @@
-import { CompoundDevice, Device, Device2In, DevicePins, DevicePinType, inPin, outPin } from '@/libsim/Devices'
+import { CompoundDevice, Device, DevicePins, inPin, outPin } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { Pin } from '@/libsim/Pins'
 import { Xor } from '@/libsim/elements/logic/Xor'
 import { And } from '@/libsim/elements/logic/And'
 
-export class HalfAdder extends CompoundDevice implements Device2In {
+export class HalfAdder extends CompoundDevice {
   readonly inA: Pin
   readonly inB: Pin
   readonly outSum: Pin

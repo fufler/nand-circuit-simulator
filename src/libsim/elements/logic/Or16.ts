@@ -1,11 +1,10 @@
-import { Device } from '@/libsim/Devices'
-import { BinaryLogicDevice16 } from '@/libsim/elements/logic/LogicDevices'
+import { Compound2In1OutDevice16, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 
 import _ from 'lodash'
 import { Or } from '@/libsim/elements/logic/Or'
 
-export class Or16 extends BinaryLogicDevice16 {
+export class Or16 extends Compound2In1OutDevice16 {
   private readonly ors: Array<Or>
 
   constructor (engine: Engine, name: string, device?: Device) {

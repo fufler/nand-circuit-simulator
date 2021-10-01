@@ -6,8 +6,8 @@ import { Not } from '@/libsim/elements/logic/Not'
 import { Bus16 } from '@/libsim/Buses'
 
 export class Not16 extends CompoundDevice {
-  private readonly in: Bus16
-  private readonly out: Bus16
+  readonly in: Bus16
+  readonly out: Bus16
   private readonly nots: Array<Not>
 
   constructor (engine: Engine, name: string, device?: Device) {

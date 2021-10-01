@@ -1,16 +1,14 @@
-import { CompoundDevice, Device, DevicePins, DevicePinType, inBus, internalPin, outBus } from '@/libsim/Devices'
+import {
+  Compound2In1OutDevice16,
+  Device
+} from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { FalsePin } from '@/libsim/Pins'
 
 import _ from 'lodash'
 import { FullAdder } from '@/libsim/elements/arithmetic/FullAdder'
-import { Bus16 } from '@/libsim/Buses'
 
-export class Adder16 extends CompoundDevice {
-  readonly inA: Bus16
-  readonly inB: Bus16
-  readonly out: Bus16
-
+export class Adder16 extends Compound2In1OutDevice16 {
   private readonly fullAdders: Array<FullAdder>
   private readonly falsePin: FalsePin
 
@@ -18,10 +16,6 @@ export class Adder16 extends CompoundDevice {
     super(engine, name, device)
 
     this.falsePin = new FalsePin(engine, 'false', this)
-
-    this.inA = new Bus16(engine, 'inA', this)
-    this.inB = new Bus16(engine, 'inB', this)
-    this.out = new Bus16(engine, 'out', this)
 
     this.fullAdders = _.times(16, n => new FullAdder(engine, `full-adder-${n}`, this))
 
@@ -50,14 +44,5 @@ export class Adder16 extends CompoundDevice {
 
   getDevices (): Array<Device> {
     return this.fullAdders
-  }
-
-  getPins (): DevicePins {
-    return [
-      internalPin(this.falsePin),
-      ...inBus(this.inA),
-      ...inBus(this.inB),
-      ...outBus(this.out)
-    ]
   }
 }

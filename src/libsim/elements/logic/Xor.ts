@@ -1,9 +1,8 @@
-import { Device } from '@/libsim/Devices'
+import { Compound2In1OutDevice, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { Nand } from '@/libsim/elements/logic/Nand'
-import { BinaryLogicDevice } from '@/libsim/elements/logic/LogicDevices'
 
-export class Xor extends BinaryLogicDevice {
+export class Xor extends Compound2In1OutDevice {
     private readonly nandAB: Nand
     private readonly nandA: Nand
     private readonly nandB: Nand

@@ -66,28 +66,46 @@ export abstract class CompoundDevice extends Device {
     }
 }
 
-export interface Device2In {
+export abstract class Compound2In1OutDevice extends CompoundDevice {
   readonly inA: Pin
   readonly inB: Pin
-}
-
-export interface Device3In extends Device2In {
-  readonly inC: Pin
-}
-
-export interface Device1Out {
   readonly out: Pin
+
+  protected constructor (engine: Engine, name: string, device?: Device) {
+    super(engine, name, device)
+
+    this.inA = new Pin(engine, 'inA', this)
+    this.inB = new Pin(engine, 'inB', this)
+    this.out = new Pin(engine, 'out', this)
+  }
+
+  getPins (): DevicePins {
+    return [
+      inPin(this.inA),
+      inPin(this.inB),
+      outPin(this.out)
+    ]
+  }
 }
 
-export interface Device2In1Out extends Device2In, Device1Out {}
-
-export interface Device2In16 {
+export abstract class Compound2In1OutDevice16 extends CompoundDevice {
   readonly inA: Bus16
   readonly inB: Bus16
-}
-
-export interface Device1Out16 {
   readonly out: Bus16
-}
 
-export interface Device2In1Out16 extends Device2In16, Device1Out16 {}
+  protected constructor (engine: Engine, name: string, device?: Device) {
+    super(engine, name, device)
+
+    this.inA = new Bus16(engine, 'inA', this)
+    this.inB = new Bus16(engine, 'inB', this)
+    this.out = new Bus16(engine, 'out', this)
+  }
+
+  getPins (): DevicePins {
+    return [
+      ...inBus(this.inA),
+      ...inBus(this.inB),
+      ...outBus(this.out)
+    ]
+  }
+}

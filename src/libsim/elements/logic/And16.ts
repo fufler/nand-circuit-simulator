@@ -1,11 +1,10 @@
-import { Device } from '@/libsim/Devices'
-import { BinaryLogicDevice16 } from '@/libsim/elements/logic/LogicDevices'
+import { Compound2In1OutDevice16, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { And } from '@/libsim/elements/logic/And'
 
 import _ from 'lodash'
 
-export class And16 extends BinaryLogicDevice16 {
+export class And16 extends Compound2In1OutDevice16 {
   private readonly ands: Array<And>
 
   constructor (engine: Engine, name: string, device?: Device) {
