@@ -62,11 +62,13 @@ export const fromPins = (pins: Record<string, Signal>, prefix: string): number =
 
 export const groupByPrefixFormatter = (re: RegExp, indexed: boolean): SignalFormatter => (signal: NamedMultiPinSignal): string => {
   const matched: Array<[string, string, number | string]> = []
+  const notMatched: Array<string> = []
 
   for (const key of _.keys(signal)) {
     const m = key.match(re)
 
     if (m == null) {
+      notMatched.push(key)
       continue
     }
 
@@ -79,7 +81,7 @@ export const groupByPrefixFormatter = (re: RegExp, indexed: boolean): SignalForm
     }
   }
 
-  return _(matched)
+  const groupedValues = _(matched)
     .groupBy(m => m[1])
     .mapValues(gm =>
       _(gm)
@@ -90,6 +92,13 @@ export const groupByPrefixFormatter = (re: RegExp, indexed: boolean): SignalForm
           ''
         )
     )
+    .value()
+
+  for (const v of notMatched) {
+    groupedValues[v] = signal[v].toString()
+  }
+
+  return _(groupedValues)
     .toPairs()
     .map(([k, v]) => `${k} = ${v}`)
     .join(', ')
