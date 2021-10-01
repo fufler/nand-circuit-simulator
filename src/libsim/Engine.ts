@@ -2,6 +2,7 @@ import { CircuitElement } from '@/libsim/CircuitElement'
 import { Signal, Pin, UpdatablePin } from '@/libsim/Pins'
 import { Device } from '@/libsim/Devices'
 import { CircuitDefinition, validateDefinition } from '@/libsim/CircuitDefinition'
+import { Bus, PinBus } from '@/libsim/Buses'
 
 type ExceptionConstructor = new(msg: string) => Error
 const throwError = (constr: ExceptionConstructor, msg: string): never => {
@@ -79,6 +80,19 @@ export class Engine {
 
     this.pinsLinksInverted.set(dst, src)
     this.pinsLinks.set(src, links)
+  }
+
+  linkBuses (src: Bus | PinBus, dst: Bus | PinBus) {
+    const _src = Array.isArray(src) ? src : src.pins
+    const _dst = Array.isArray(dst) ? dst : dst.pins
+
+    if (_src.length !== _dst.length) {
+      throw new LinkError(`Cannot link buses of different length: ${_src.length} and ${_dst.length}`)
+    }
+
+    for (let i = 0; i < _src.length; i++) {
+      this.linkPins(_src[i], _dst[i])
+    }
   }
 
   getSignalFromLinkedPin (pin: Pin): Signal | undefined {
