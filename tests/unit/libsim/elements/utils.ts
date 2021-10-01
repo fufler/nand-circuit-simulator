@@ -143,7 +143,7 @@ export const makeSpec = (name: string, provider: DeviceProvider, impl: DeviceImp
 
     const expectedOut = impl(input)
 
-    it(`${name}(${formatter(input)}) === (${formatter(expectedOut)})`, async () => {
+    it(`${name}(${formatter(input)}) === { ${formatter(expectedOut)} }`, async () => {
       for (let i = 0; i < signals.length; i++) {
         inputPins[i].setSignal(signals[i])
       }
