@@ -16,5 +16,5 @@ makeSpec(
     return toPins('out-', 0xFFFFFFFF - a)
   },
   RANDOM_INPUT.map(a => toPins('in-', a)),
-  groupByPrefixFormatter(/(in|out)-(\d)/, true)
+  groupByPrefixFormatter(/(in|out)-(\d)/)
 )

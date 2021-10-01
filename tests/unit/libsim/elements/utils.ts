@@ -60,7 +60,7 @@ export const fromPins = (pins: Record<string, Signal>, prefix: string): number =
     0
   )
 
-export const groupByPrefixFormatter = (re: RegExp, indexed: boolean): SignalFormatter => (signal: NamedMultiPinSignal): string => {
+export const groupByPrefixFormatter = (re: RegExp): SignalFormatter => (signal: NamedMultiPinSignal): string => {
   const matched: Array<[string, string, number | string]> = []
   const notMatched: Array<string> = []
 
@@ -77,7 +77,7 @@ export const groupByPrefixFormatter = (re: RegExp, indexed: boolean): SignalForm
     const index = m[2]
 
     if (name != null && group != null && index != null) {
-      matched.push([name, group, index ? parseInt(index, 10) : index])
+      matched.push([name, group, parseInt(index, 10)])
     }
   }
 

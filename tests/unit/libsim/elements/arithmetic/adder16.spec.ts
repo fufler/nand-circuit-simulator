@@ -26,5 +26,5 @@ makeSpec(
     ...toPins('inA-', a),
     ...toPins('inB-', b)
   })),
-  groupByPrefixFormatter(/(in\w|out)-(\d)/, true)
+  groupByPrefixFormatter(/(in\w|out)-(\d)/)
 )
