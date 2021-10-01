@@ -16,6 +16,7 @@ type NamedMultiPinSignals = Array<NamedMultiPinSignal>
 
 type SignalFormatter = (signal: NamedMultiPinSignal) => string
 
+export const randomNumber8 = (start = 0): number => start + Math.ceil(Math.random() * (255 - start))
 export const randomNumber16 = (start = 0): number => start + Math.ceil(Math.random() * (65535 - start))
 
 export const makeSignals = (n: number): MultiPinSignals => {
