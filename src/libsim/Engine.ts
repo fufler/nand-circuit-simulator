@@ -82,7 +82,7 @@ export class Engine {
     this.pinsLinks.set(src, links)
   }
 
-  linkBuses (src: Bus | PinBus, dst: Bus | PinBus) {
+  linkBuses (src: Bus | PinBus, dst: Bus | PinBus): void {
     const _src = Array.isArray(src) ? src : src.pins
     const _dst = Array.isArray(dst) ? dst : dst.pins
 

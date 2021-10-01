@@ -1,4 +1,4 @@
-import { CompoundDevice, Device, DevicePins, DevicePinType, inPin, outPin } from '@/libsim/Devices'
+import { CompoundDevice, Device, DevicePins, inPin, outPin } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { Pin } from '@/libsim/Pins'
 import { Nand } from '@/libsim/elements/logic/Nand'
