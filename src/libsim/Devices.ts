@@ -1,7 +1,7 @@
 import { CircuitElement } from '@/libsim/CircuitElement'
 import { Pin } from '@/libsim/Pins'
 import { Engine } from '@/libsim/Engine'
-import { Bus } from '@/libsim/Buses'
+import { Bus, Bus16 } from '@/libsim/Buses'
 
 export interface DevicePart extends CircuitElement {
   readonly device?: Device
@@ -71,7 +71,7 @@ export interface Device2In {
   readonly inB: Pin
 }
 
-export interface Device3In extends Device2In{
+export interface Device3In extends Device2In {
   readonly inC: Pin
 }
 
@@ -80,3 +80,14 @@ export interface Device1Out {
 }
 
 export interface Device2In1Out extends Device2In, Device1Out {}
+
+export interface Device2In16 {
+  readonly inA: Bus16
+  readonly inB: Bus16
+}
+
+export interface Device1Out16 {
+  readonly out: Bus16
+}
+
+export interface Device2In1Out16 extends Device2In16, Device1Out16 {}
