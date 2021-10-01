@@ -16,6 +16,8 @@ type NamedMultiPinSignals = Array<NamedMultiPinSignal>
 
 type SignalFormatter = (signal: NamedMultiPinSignal) => string
 
+export const randomNumber16 = (start = 0) => start + Math.ceil(Math.random() * (65535 - start))
+
 export const makeSignals = (n: number): MultiPinSignals => {
   if (n === 1) {
     return [[Signal.LOW], [Signal.HIGH]]
@@ -105,6 +107,10 @@ export const makeSpec = (name: string, provider: DeviceProvider, impl: DeviceImp
   const outputPins: Array<Pin> = []
 
   for (const [pin, type] of device.getPins()) {
+    if (type === DevicePinType.INTERNAL) {
+      continue
+    }
+
     if (type === DevicePinType.INPUT) {
       const p = new UpdatablePin(engine, pin.name)
       inputPins.push(p)

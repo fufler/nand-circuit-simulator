@@ -1,6 +1,7 @@
 import { CircuitElement } from '@/libsim/CircuitElement'
 import { Pin } from '@/libsim/Pins'
 import { Engine } from '@/libsim/Engine'
+import { Bus } from '@/libsim/Buses'
 
 export interface DevicePart extends CircuitElement {
   readonly device?: Device
@@ -8,10 +9,19 @@ export interface DevicePart extends CircuitElement {
 
 export enum DevicePinType {
   INPUT,
-  OUTPUT
+  OUTPUT,
+  INTERNAL
 }
 
-export type DevicePins = Array<[Pin, DevicePinType]>
+export type DevicePin = [Pin, DevicePinType]
+export type DevicePins = Array<DevicePin>
+
+export const inPin = (pin: Pin): DevicePin => [pin, DevicePinType.INPUT]
+export const outPin = (pin: Pin): DevicePin => [pin, DevicePinType.OUTPUT]
+export const internalPin = (pin: Pin): DevicePin => [pin, DevicePinType.INTERNAL]
+
+export const inBus = (bus: Bus): DevicePins => bus.pins.map(inPin)
+export const outBus = (bus: Bus): DevicePins => bus.pins.map(outPin)
 
 export abstract class Device extends CircuitElement implements DevicePart {
     protected engine: Engine

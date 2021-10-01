@@ -47,6 +47,12 @@ export class FalsePin extends Pin {
   }
 }
 
+export class TruePin extends Pin {
+  getSignal (): Signal {
+    return Signal.HIGH
+  }
+}
+
 export class UpdatablePin extends Pin {
   setSignal (signal: Signal): void {
     if (signal === this.signal) { return }
