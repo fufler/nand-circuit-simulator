@@ -5,7 +5,7 @@ import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, toPins } fr
 import _ from 'lodash'
 import { And16 } from '@/libsim/elements/logic/And16'
 
-const RANDOM_INPUT = _.times(10, () => [randomNumber16(1), randomNumber16()])
+const RANDOM_INPUT = _.times(50, () => [randomNumber16(1), randomNumber16()])
 
 makeSpec(
   'And16',

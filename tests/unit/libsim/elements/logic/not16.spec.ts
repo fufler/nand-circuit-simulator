@@ -5,7 +5,7 @@ import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, toPins } fr
 import _ from 'lodash'
 import { Not16 } from '@/libsim/elements/logic/Not16'
 
-const RANDOM_INPUT = _.times(10, randomNumber16)
+const RANDOM_INPUT = _.times(50, randomNumber16)
 
 makeSpec(
   'Not16',

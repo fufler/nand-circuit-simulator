@@ -5,7 +5,7 @@ import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, toPins } fr
 import _ from 'lodash'
 import { Incrementer16 } from '@/libsim/elements/arithmetic/Incrementer16'
 
-const RANDOM_INPUT = _.times(10, () => randomNumber16(1))
+const RANDOM_INPUT = _.times(50, () => randomNumber16(1))
 
 makeSpec(
   'Incrementer16',
