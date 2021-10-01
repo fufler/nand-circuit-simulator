@@ -1,6 +1,6 @@
 import { Engine } from '@/libsim/Engine'
 import { Pin, Signal, UpdatablePin } from '@/libsim/Pins'
-import { CustomLogicDevice, Device, DevicePins, listDevice2In1OutPins } from '@/libsim/Devices'
+import { CustomLogicDevice, Device, DevicePins, inPin, outPin } from '@/libsim/Devices'
 
 export class Nand extends CustomLogicDevice {
     readonly inA: Pin
@@ -25,6 +25,10 @@ export class Nand extends CustomLogicDevice {
     }
 
     getPins (): DevicePins {
-      return listDevice2In1OutPins(this)
+      return [
+        inPin(this.inA),
+        inPin(this.inB),
+        outPin(this.out)
+      ]
     }
 }

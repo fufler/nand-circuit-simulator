@@ -1,4 +1,11 @@
-import { CompoundDevice, Device, Device2In1Out, DevicePins, listDevice2In1OutPins } from '@/libsim/Devices'
+import {
+  CompoundDevice,
+  Device,
+  Device2In1Out,
+  DevicePins,
+  inPin,
+  outPin
+} from '@/libsim/Devices'
 import { Pin } from '@/libsim/Pins'
 import { Engine } from '@/libsim/Engine'
 
@@ -16,6 +23,10 @@ export abstract class BinaryLogicDevice extends CompoundDevice implements Device
     }
 
     getPins (): DevicePins {
-      return listDevice2In1OutPins(this)
+      return [
+        inPin(this.inA),
+        inPin(this.inB),
+        outPin(this.out)
+      ]
     }
 }

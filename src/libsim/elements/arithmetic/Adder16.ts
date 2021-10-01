@@ -1,4 +1,4 @@
-import { CompoundDevice, Device, DevicePins, DevicePinType } from '@/libsim/Devices'
+import { CompoundDevice, Device, DevicePins, DevicePinType, inBus, internalPin, outBus } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { FalsePin } from '@/libsim/Pins'
 
@@ -53,13 +53,11 @@ export class Adder16 extends CompoundDevice {
   }
 
   getPins (): DevicePins {
-    const inPins: DevicePins = _.map(
-      [...this.inA.pins, ...this.inB.pins],
-      p => [p, DevicePinType.INPUT]
-    )
-
-    const outPins: DevicePins = _.map(this.out.pins, p => [p, DevicePinType.OUTPUT])
-
-    return [...inPins, ...outPins]
+    return [
+      internalPin(this.falsePin),
+      ...inBus(this.inA),
+      ...inBus(this.inB),
+      ...outBus(this.out)
+    ]
   }
 }

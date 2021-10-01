@@ -80,11 +80,3 @@ export interface Device1Out {
 }
 
 export interface Device2In1Out extends Device2In, Device1Out {}
-
-export const listDevice2In1OutPins = (device: Device2In1Out): DevicePins => {
-  return [
-    [device.inA, DevicePinType.INPUT],
-    [device.inB, DevicePinType.INPUT],
-    [device.out, DevicePinType.OUTPUT]
-  ]
-}

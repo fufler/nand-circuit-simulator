@@ -1,4 +1,4 @@
-import { CompoundDevice, Device, Device2In, DevicePins, DevicePinType } from '@/libsim/Devices'
+import { CompoundDevice, Device, Device2In, DevicePins, DevicePinType, inPin, outPin } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { Pin } from '@/libsim/Pins'
 import { HalfAdder } from '@/libsim/elements/arithmetic/HalfAdder'
@@ -46,11 +46,11 @@ export class FullAdder extends CompoundDevice implements Device2In {
 
   getPins (): DevicePins {
     return [
-      [this.inA, DevicePinType.INPUT],
-      [this.inB, DevicePinType.INPUT],
-      [this.inC, DevicePinType.INPUT],
-      [this.outSum, DevicePinType.OUTPUT],
-      [this.outCarry, DevicePinType.OUTPUT]
+      inPin(this.inA),
+      inPin(this.inB),
+      inPin(this.inC),
+      outPin(this.outSum),
+      outPin(this.outCarry)
     ]
   }
 }
