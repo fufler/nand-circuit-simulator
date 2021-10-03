@@ -35,6 +35,7 @@ export const makeSignals = (n: number): MultiPinSignals => {
 export const SIGNALS = makeSignals(1)
 export const SIGNALS2 = makeSignals(2)
 export const SIGNALS3 = makeSignals(3)
+export const SIGNALS6 = makeSignals(6)
 
 const pinsToString = (signal: NamedMultiPinSignal): string => _(signal)
   .toPairs()
@@ -152,7 +153,9 @@ export const makeSpec = (name: string, provider: DeviceProvider, impl: DeviceImp
       expect(await engine.run()).to.be.true
 
       for (const pin of outputPins) {
-        expect(pin.getSignal()).to.be.equal(expectedOut[pin.name], pin.name)
+        if (expectedOut[pin.name] !== undefined) {
+          expect(pin.getSignal()).to.be.equal(expectedOut[pin.name], pin.name)
+        }
       }
     })
   }

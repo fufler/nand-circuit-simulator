@@ -58,6 +58,14 @@ export abstract class CustomLogicDevice extends Device {
 export abstract class CompoundDevice extends Device {
     readonly hasCustomLogic = false
 
+    protected makePin (name: string): Pin {
+      return new Pin(this.engine, name, this)
+    }
+
+    protected makeBus16 (name: string): Bus16 {
+      return new Bus16(this.engine, name, this)
+    }
+
     abstract getDevices(): Array<Device>;
     abstract getPins(): DevicePins;
 
