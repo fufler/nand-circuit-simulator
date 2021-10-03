@@ -1,6 +1,6 @@
 import { CircuitElement } from '@/libsim/CircuitElement'
 import { FalsePin, Pin, TruePin } from '@/libsim/Pins'
-import { Engine, LinkError } from '@/libsim/Engine'
+import { Engine } from '@/libsim/Engine'
 import { Bus, PinBus } from '@/libsim/Buses'
 
 import _ from 'lodash'
@@ -26,7 +26,8 @@ export abstract class Device extends CircuitElement implements DevicePart {
   abstract getPins (): DevicePins
 
   abstract getDevices (): Array<Device>
-  abstract init(): void
+
+  abstract init (): void
 
   abstract readonly hasCustomLogic: boolean
 
