@@ -114,6 +114,8 @@ export const makeSpec = (name: string, provider: DeviceProvider, impl: DeviceImp
 
   const device = provider(engine)
 
+  device.init()
+
   const inputPins: Array<UpdatablePin> = []
   const outputPins: Array<Pin> = []
 

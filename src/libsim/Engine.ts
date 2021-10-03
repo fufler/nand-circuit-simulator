@@ -138,6 +138,8 @@ export class Engine {
       // eslint-disable-next-line new-cap
       const device = new deviceConstructor(this, deviceDef.name ?? deviceDef.type)
 
+      device.init()
+
       if (devices.has(deviceDef.id)) {
         throw new Error(`Duplicate device id ${deviceDef.id} specified`)
       }

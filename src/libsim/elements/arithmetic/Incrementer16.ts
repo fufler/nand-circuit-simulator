@@ -1,5 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
-import { Engine } from '@/libsim/Engine'
+import { CompoundDevice } from '@/libsim/Devices'
 
 import _ from 'lodash'
 import { Adder16 } from '@/libsim/elements/arithmetic/Adder16'
@@ -13,20 +12,18 @@ export class Incrementer16 extends CompoundDevice {
 
   private readonly adder = this.makeDevice(Adder16, 'adder')
 
-  constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
-
-    engine.linkBuses(
+  init (): void {
+    this.linkBuses(
       this.in,
       this.adder.inA
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       this.adder.out,
       this.out
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       [
         this.truePin,
         ..._.times(15, () => this.falsePin)

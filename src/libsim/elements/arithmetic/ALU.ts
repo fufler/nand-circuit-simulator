@@ -1,5 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
-import { Engine } from '@/libsim/Engine'
+import { CompoundDevice } from '@/libsim/Devices'
 import { Mux16 } from '@/libsim/elements/selectors/Mux16'
 import { Not16 } from '@/libsim/elements/logic/Not16'
 import { And16 } from '@/libsim/elements/logic/And16'
@@ -46,59 +45,57 @@ export class ALU extends CompoundDevice {
   private readonly resultZeroOr = this.makeDevice(Or16Way, 'resultZeroOr')
   private readonly resultZeroNot = this.makeDevice(Not, 'resultZeroNot')
 
-  constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
-
+  init (): void {
     const falseBus = _.times(16, () => this.falsePin)
 
-    engine.linkBuses(
+    this.linkBuses(
       falseBus,
       this.zeroXMux.inB
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       falseBus,
       this.zeroYMux.inB
     )
 
-    engine.linkBuses(this.inX, this.zeroXMux.inA)
-    engine.linkBuses(this.inY, this.zeroYMux.inA)
+    this.linkBuses(this.inX, this.zeroXMux.inA)
+    this.linkBuses(this.inY, this.zeroYMux.inA)
 
-    engine.linkPins(this.zx, this.zeroXMux.sel)
-    engine.linkPins(this.zy, this.zeroYMux.sel)
+    this.linkPins(this.zx, this.zeroXMux.sel)
+    this.linkPins(this.zy, this.zeroYMux.sel)
 
-    engine.linkBuses(this.zeroXMux.out, this.invertXMux.inA)
-    engine.linkBuses(this.zeroXMux.out, this.invertXNot.in)
-    engine.linkBuses(this.invertXNot.out, this.invertXMux.inB)
-    engine.linkPins(this.nx, this.invertXMux.sel)
+    this.linkBuses(this.zeroXMux.out, this.invertXMux.inA)
+    this.linkBuses(this.zeroXMux.out, this.invertXNot.in)
+    this.linkBuses(this.invertXNot.out, this.invertXMux.inB)
+    this.linkPins(this.nx, this.invertXMux.sel)
 
-    engine.linkBuses(this.zeroYMux.out, this.invertYMux.inA)
-    engine.linkBuses(this.zeroYMux.out, this.invertYNot.in)
-    engine.linkBuses(this.invertYNot.out, this.invertYMux.inB)
-    engine.linkPins(this.ny, this.invertYMux.sel)
+    this.linkBuses(this.zeroYMux.out, this.invertYMux.inA)
+    this.linkBuses(this.zeroYMux.out, this.invertYNot.in)
+    this.linkBuses(this.invertYNot.out, this.invertYMux.inB)
+    this.linkPins(this.ny, this.invertYMux.sel)
 
-    engine.linkBuses(this.invertXMux.out, this.adder16.inA)
-    engine.linkBuses(this.invertYMux.out, this.adder16.inB)
+    this.linkBuses(this.invertXMux.out, this.adder16.inA)
+    this.linkBuses(this.invertYMux.out, this.adder16.inB)
 
-    engine.linkBuses(this.invertXMux.out, this.and16.inA)
-    engine.linkBuses(this.invertYMux.out, this.and16.inB)
+    this.linkBuses(this.invertXMux.out, this.and16.inA)
+    this.linkBuses(this.invertYMux.out, this.and16.inB)
 
-    engine.linkBuses(this.and16.out, this.resultMux.inA)
-    engine.linkBuses(this.adder16.out, this.resultMux.inB)
-    engine.linkPins(this.f, this.resultMux.sel)
+    this.linkBuses(this.and16.out, this.resultMux.inA)
+    this.linkBuses(this.adder16.out, this.resultMux.inB)
+    this.linkPins(this.f, this.resultMux.sel)
 
-    engine.linkBuses(this.resultMux.out, this.resultInvertNot.in)
+    this.linkBuses(this.resultMux.out, this.resultInvertNot.in)
 
-    engine.linkBuses(this.resultMux.out, this.resultInvertMux.inA)
-    engine.linkBuses(this.resultInvertNot.out, this.resultInvertMux.inB)
-    engine.linkPins(this.no, this.resultInvertMux.sel)
+    this.linkBuses(this.resultMux.out, this.resultInvertMux.inA)
+    this.linkBuses(this.resultInvertNot.out, this.resultInvertMux.inB)
+    this.linkPins(this.no, this.resultInvertMux.sel)
 
-    engine.linkBuses(this.resultInvertMux.out, this.out)
+    this.linkBuses(this.resultInvertMux.out, this.out)
 
-    engine.linkPins(this.resultInvertMux.out.pins[15], this.ng)
+    this.linkPins(this.resultInvertMux.out.pins[15], this.ng)
 
-    engine.linkBuses(this.resultInvertMux.out, this.resultZeroOr.in)
-    engine.linkPins(this.resultZeroOr.out, this.resultZeroNot.in)
-    engine.linkPins(this.resultZeroNot.out, this.zr)
+    this.linkBuses(this.resultInvertMux.out, this.resultZeroOr.in)
+    this.linkPins(this.resultZeroOr.out, this.resultZeroNot.in)
+    this.linkPins(this.resultZeroNot.out, this.zr)
   }
 }

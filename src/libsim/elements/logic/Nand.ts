@@ -31,4 +31,8 @@ export class Nand extends CustomLogicDevice {
       [this.out, DevicePinType.OUTPUT]
     ]
   }
+
+  init (): void {
+    //
+  }
 }

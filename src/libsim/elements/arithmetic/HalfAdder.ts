@@ -1,5 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
-import { Engine } from '@/libsim/Engine'
+import { CompoundDevice } from '@/libsim/Devices'
 import { Xor } from '@/libsim/elements/logic/Xor'
 import { And } from '@/libsim/elements/logic/And'
 
@@ -12,15 +11,13 @@ export class HalfAdder extends CompoundDevice {
   private readonly and = this.makeDevice(And, 'and')
   private readonly xor = this.makeDevice(Xor, 'xor')
 
-  constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
+  init (): void {
+    this.linkPins(this.inA, this.and.inA)
+    this.linkPins(this.inB, this.and.inB)
+    this.linkPins(this.and.out, this.outCarry)
 
-    this.engine.linkPins(this.inA, this.and.inA)
-    this.engine.linkPins(this.inB, this.and.inB)
-    this.engine.linkPins(this.and.out, this.outCarry)
-
-    this.engine.linkPins(this.inA, this.xor.inA)
-    this.engine.linkPins(this.inB, this.xor.inB)
-    this.engine.linkPins(this.xor.out, this.outSum)
+    this.linkPins(this.inA, this.xor.inA)
+    this.linkPins(this.inB, this.xor.inB)
+    this.linkPins(this.xor.out, this.outSum)
   }
 }

@@ -1,5 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
-import { Engine } from '@/libsim/Engine'
+import { CompoundDevice } from '@/libsim/Devices'
 import { Mux16 } from '@/libsim/elements/selectors/Mux16'
 
 export class Mux4Way16 extends CompoundDevice {
@@ -14,21 +13,19 @@ export class Mux4Way16 extends CompoundDevice {
   private readonly muxCD = this.makeDevice(Mux16, 'muxCD')
   private readonly mux = this.makeDevice(Mux16, 'mux')
 
-  constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
+  init (): void {
+    this.linkBuses(this.inA, this.muxAB.inA)
+    this.linkBuses(this.inB, this.muxAB.inB)
+    this.linkPins(this.sel.pins[0], this.muxAB.sel)
 
-    engine.linkBuses(this.inA, this.muxAB.inA)
-    engine.linkBuses(this.inB, this.muxAB.inB)
-    engine.linkPins(this.sel.pins[0], this.muxAB.sel)
+    this.linkBuses(this.inC, this.muxCD.inA)
+    this.linkBuses(this.inD, this.muxCD.inB)
+    this.linkPins(this.sel.pins[0], this.muxCD.sel)
 
-    engine.linkBuses(this.inC, this.muxCD.inA)
-    engine.linkBuses(this.inD, this.muxCD.inB)
-    engine.linkPins(this.sel.pins[0], this.muxCD.sel)
+    this.linkBuses(this.muxAB.out, this.mux.inA)
+    this.linkBuses(this.muxCD.out, this.mux.inB)
+    this.linkPins(this.sel.pins[1], this.mux.sel)
 
-    engine.linkBuses(this.muxAB.out, this.mux.inA)
-    engine.linkBuses(this.muxCD.out, this.mux.inB)
-    engine.linkPins(this.sel.pins[1], this.mux.sel)
-
-    engine.linkBuses(this.mux.out, this.out)
+    this.linkBuses(this.mux.out, this.out)
   }
 }

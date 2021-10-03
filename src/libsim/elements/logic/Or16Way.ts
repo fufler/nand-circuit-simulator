@@ -1,5 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
-import { Engine } from '@/libsim/Engine'
+import { CompoundDevice } from '@/libsim/Devices'
 import { Or } from '@/libsim/elements/logic/Or'
 
 import { Or8Way } from '@/libsim/elements/logic/Or8Way'
@@ -12,22 +11,20 @@ export class Or16Way extends CompoundDevice {
   private readonly orLow = this.makeDevice(Or8Way, 'orLow')
   private readonly or = this.makeDevice(Or, 'or')
 
-  constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
-
-    engine.linkBuses(
+  init (): void {
+    this.linkBuses(
       this.in.pins.slice(0, 8),
       this.orLow.in
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       this.in.pins.slice(8),
       this.orHigh.in
     )
 
-    engine.linkPins(this.orLow.out, this.or.inA)
-    engine.linkPins(this.orHigh.out, this.or.inB)
+    this.linkPins(this.orLow.out, this.or.inA)
+    this.linkPins(this.orHigh.out, this.or.inB)
 
-    engine.linkPins(this.or.out, this.out)
+    this.linkPins(this.or.out, this.out)
   }
 }

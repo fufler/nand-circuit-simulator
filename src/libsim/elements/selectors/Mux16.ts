@@ -1,5 +1,4 @@
-import { CompoundDevice, Device } from '@/libsim/Devices'
-import { Engine } from '@/libsim/Engine'
+import { CompoundDevice } from '@/libsim/Devices'
 import { Mux } from '@/libsim/elements/selectors/Mux'
 
 import _ from 'lodash'
@@ -12,25 +11,23 @@ export class Mux16 extends CompoundDevice {
 
   private readonly muxes = this.makeDevices(16, Mux, 'mux')
 
-  constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
-
-    engine.linkBuses(
+  init (): void {
+    this.linkBuses(
       this.inA,
       this.muxes.map(m => m.inA)
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       this.inB,
       this.muxes.map(m => m.inB)
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       this.muxes.map(m => m.out),
       this.out
     )
 
-    engine.linkBuses(
+    this.linkBuses(
       _.times(16, () => this.sel),
       this.muxes.map(m => m.sel)
     )

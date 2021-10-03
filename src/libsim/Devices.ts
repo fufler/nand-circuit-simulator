@@ -1,7 +1,7 @@
 import { CircuitElement } from '@/libsim/CircuitElement'
 import { FalsePin, Pin, TruePin } from '@/libsim/Pins'
-import { Engine } from '@/libsim/Engine'
-import { Bus } from '@/libsim/Buses'
+import { Engine, LinkError } from '@/libsim/Engine'
+import { Bus, PinBus } from '@/libsim/Buses'
 
 import _ from 'lodash'
 
@@ -26,14 +26,23 @@ export abstract class Device extends CircuitElement implements DevicePart {
   abstract getPins (): DevicePins
 
   abstract getDevices (): Array<Device>
+  abstract init(): void
 
   abstract readonly hasCustomLogic: boolean
 
-  protected constructor (engine: Engine, name: string, device?: Device) {
+  constructor (engine: Engine, name: string, device?: Device) {
     super()
     this.engine = engine
     this.name = name
     this.device = device
+  }
+
+  linkPins (src: Pin, dst: Pin): void {
+    this.engine.linkPins(src, dst)
+  }
+
+  linkBuses (src: Bus | PinBus, dst: Bus | PinBus): void {
+    this.engine.linkBuses(src, dst)
   }
 
   abstract propagate (): boolean
@@ -97,6 +106,8 @@ export abstract class CompoundDevice extends Device {
   protected makeDevices<T extends Device> (count: number, ctor: (new (engine: Engine, name: string, device?: Device) => T), name: string): Array<T> {
     // eslint-disable-next-line new-cap
     const devices = _.times(count, n => new ctor(this.engine, `${name}-${n + 1}`, this))
+
+    devices.forEach(d => d.init())
 
     this.devices.push(...devices)
 
