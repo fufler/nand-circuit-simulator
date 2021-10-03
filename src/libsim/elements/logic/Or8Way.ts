@@ -6,7 +6,7 @@ import { Or } from '@/libsim/elements/logic/Or'
 
 import _ from 'lodash'
 
-export class Or8 extends CompoundDevice {
+export class Or8Way extends CompoundDevice {
   readonly in: Bus8
   readonly out: Pin
 
