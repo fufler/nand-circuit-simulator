@@ -1,5 +1,5 @@
 import { CircuitElement } from '@/libsim/CircuitElement'
-import { Signal, Pin, UpdatablePin } from '@/libsim/Pins'
+import { Pin, Signal, UpdatablePin } from '@/libsim/Pins'
 import { Device } from '@/libsim/Devices'
 import { CircuitDefinition, validateDefinition } from '@/libsim/CircuitDefinition'
 import { Bus, PinBus } from '@/libsim/Buses'
@@ -10,9 +10,14 @@ const throwError = (constr: ExceptionConstructor, msg: string): never => {
   throw new constr(msg)
 }
 
-export class LinkError extends Error {}
-export class ConfigurationError extends Error {}
-export class InvalidArgumentError extends Error {}
+export class LinkError extends Error {
+}
+
+export class ConfigurationError extends Error {
+}
+
+export class InvalidArgumentError extends Error {
+}
 
 export class Link {
   readonly src: Pin
@@ -176,7 +181,8 @@ export class Engine {
 
   getLinks (): Array<Link> {
     return Array.from(this.pinsLinksInverted.entries()).map(([dst, src]) => ({
-      src, dst
+      src,
+      dst
     }))
   }
 }

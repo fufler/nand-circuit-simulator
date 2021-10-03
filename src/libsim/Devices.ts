@@ -1,7 +1,9 @@
 import { CircuitElement } from '@/libsim/CircuitElement'
-import { Pin } from '@/libsim/Pins'
+import { FalsePin, Pin, TruePin } from '@/libsim/Pins'
 import { Engine } from '@/libsim/Engine'
-import { Bus, Bus16 } from '@/libsim/Buses'
+import { Bus } from '@/libsim/Buses'
+
+import _ from 'lodash'
 
 export interface DevicePart extends CircuitElement {
   readonly device?: Device
@@ -16,104 +18,130 @@ export enum DevicePinType {
 export type DevicePin = [Pin, DevicePinType]
 export type DevicePins = Array<DevicePin>
 
-export const inPin = (pin: Pin): DevicePin => [pin, DevicePinType.INPUT]
-export const outPin = (pin: Pin): DevicePin => [pin, DevicePinType.OUTPUT]
-export const internalPin = (pin: Pin): DevicePin => [pin, DevicePinType.INTERNAL]
-
-export const inBus = (bus: Bus): DevicePins => bus.pins.map(inPin)
-export const outBus = (bus: Bus): DevicePins => bus.pins.map(outPin)
-
 export abstract class Device extends CircuitElement implements DevicePart {
-    protected engine: Engine
-    readonly name: string;
-    readonly device?: Device
+  protected engine: Engine
+  readonly name: string
+  readonly device?: Device
 
-    abstract getPins(): DevicePins
+  abstract getPins (): DevicePins
 
-    abstract getDevices(): Array<Device>
+  abstract getDevices (): Array<Device>
 
-    abstract readonly hasCustomLogic: boolean
+  abstract readonly hasCustomLogic: boolean
 
-    protected constructor (engine: Engine, name: string, device?: Device) {
-      super()
-      this.engine = engine
-      this.name = name
-      this.device = device
-    }
+  protected constructor (engine: Engine, name: string, device?: Device) {
+    super()
+    this.engine = engine
+    this.name = name
+    this.device = device
+  }
 
-    abstract propagate(): boolean
+  abstract propagate (): boolean
 }
 
 export abstract class CustomLogicDevice extends Device {
-    readonly hasCustomLogic = true
+  readonly hasCustomLogic = true
 
-    abstract getPins(): DevicePins
-    abstract propagate(): boolean
+  abstract getPins (): DevicePins
 
-    getDevices (): Array<Device> {
-      return []
-    }
+  abstract propagate (): boolean
+
+  getDevices (): Array<Device> {
+    return []
+  }
 }
 
 export abstract class CompoundDevice extends Device {
-    readonly hasCustomLogic = false
+  readonly hasCustomLogic = false
 
-    protected makePin (name: string): Pin {
-      return new Pin(this.engine, name, this)
-    }
+  private pins: DevicePins = []
+  private devices: Array<Device> = []
 
-    protected makeBus16 (name: string): Bus16 {
-      return new Bus16(this.engine, name, this)
-    }
+  private storePin<T extends Pin> (pin: T, type: DevicePinType): T {
+    this.pins.push([pin, type])
 
-    abstract getDevices(): Array<Device>;
-    abstract getPins(): DevicePins;
+    return pin
+  }
 
-    propagate (): boolean {
-      return false
-    }
+  private makePin (name: string, type: DevicePinType): Pin {
+    return this.storePin(
+      new Pin(this.engine, name, this),
+      type
+    )
+  }
+
+  protected makeInPin (name: string): Pin {
+    return this.makePin(name, DevicePinType.INPUT)
+  }
+
+  protected makeOutPin (name: string): Pin {
+    return this.makePin(name, DevicePinType.OUTPUT)
+  }
+
+  private makeBus (length: number, name: string, type: DevicePinType): Bus {
+    const bus = new Bus(length, this.engine, name, this)
+
+    bus.pins.forEach(p => this.storePin(p, type))
+
+    return bus
+  }
+
+  protected makeInBus (length: number, name: string): Bus {
+    return this.makeBus(length, name, DevicePinType.INPUT)
+  }
+
+  protected makeOutBus (length: number, name: string): Bus {
+    return this.makeBus(length, name, DevicePinType.OUTPUT)
+  }
+
+  protected makeDevices<T extends Device> (count: number, ctor: (new (engine: Engine, name: string, device?: Device) => T), name: string): Array<T> {
+    // eslint-disable-next-line new-cap
+    const devices = _.times(count, n => new ctor(this.engine, `${name}-${n + 1}`, this))
+
+    this.devices.push(...devices)
+
+    return devices
+  }
+
+  protected makeDevice<T extends Device> (ctor: (new (engine: Engine, name: string, device?: Device) => T), name: string): T {
+    return this.makeDevices(1, ctor, name)[0]
+  }
+
+  protected makeFalsePin (name: string): FalsePin {
+    return this.storePin(
+      new FalsePin(this.engine, name, this),
+      DevicePinType.INTERNAL
+    )
+  }
+
+  protected makeTruePin (name: string): TruePin {
+    return this.storePin(
+      new TruePin(this.engine, name, this),
+      DevicePinType.INTERNAL
+    )
+  }
+
+  getPins (): DevicePins {
+    return this.pins
+  }
+
+  getDevices (): Array<Device> {
+    return this.devices
+  }
+
+  propagate (): boolean {
+    return false
+  }
 }
 
 export abstract class Compound2In1OutDevice extends CompoundDevice {
-  readonly inA: Pin
-  readonly inB: Pin
-  readonly out: Pin
-
-  protected constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
-
-    this.inA = new Pin(engine, 'inA', this)
-    this.inB = new Pin(engine, 'inB', this)
-    this.out = new Pin(engine, 'out', this)
-  }
-
-  getPins (): DevicePins {
-    return [
-      inPin(this.inA),
-      inPin(this.inB),
-      outPin(this.out)
-    ]
-  }
+  readonly inA = this.makeInPin('inA')
+  readonly inB = this.makeInPin('inB')
+  readonly out = this.makeOutPin('out')
 }
 
 export abstract class Compound2In1OutDevice16 extends CompoundDevice {
-  readonly inA: Bus16
-  readonly inB: Bus16
-  readonly out: Bus16
-
-  protected constructor (engine: Engine, name: string, device?: Device) {
-    super(engine, name, device)
-
-    this.inA = new Bus16(engine, 'inA', this)
-    this.inB = new Bus16(engine, 'inB', this)
-    this.out = new Bus16(engine, 'out', this)
-  }
-
-  getPins (): DevicePins {
-    return [
-      ...inBus(this.inA),
-      ...inBus(this.inB),
-      ...outBus(this.out)
-    ]
-  }
+  readonly inA = this.makeInBus(16, 'inA')
+  readonly inB = this.makeInBus(16, 'inB')
+  readonly out = this.makeOutBus(16, 'out')
 }

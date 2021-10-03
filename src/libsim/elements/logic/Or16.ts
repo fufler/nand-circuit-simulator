@@ -1,16 +1,12 @@
 import { Compound2In1OutDevice16, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
-
-import _ from 'lodash'
 import { Or } from '@/libsim/elements/logic/Or'
 
 export class Or16 extends Compound2In1OutDevice16 {
-  private readonly ors: Array<Or>
+  private readonly ors = this.makeDevices(16, Or, 'or')
 
   constructor (engine: Engine, name: string, device?: Device) {
     super(engine, name, device)
-
-    this.ors = _.times(16, n => new Or(engine, `or-${n + 1}`, this))
 
     engine.linkBuses(
       this.inA,
@@ -26,9 +22,5 @@ export class Or16 extends Compound2In1OutDevice16 {
       this.ors.map(a => a.out),
       this.out
     )
-  }
-
-  getDevices (): Array<Device> {
-    return this.ors
   }
 }

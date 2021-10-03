@@ -1,24 +1,15 @@
-import { CompoundDevice, Device, DevicePins, inBus, outPin } from '@/libsim/Devices'
+import { CompoundDevice, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
-import { Bus8 } from '@/libsim/Buses'
-import { Pin } from '@/libsim/Pins'
 import { Or } from '@/libsim/elements/logic/Or'
 
-import _ from 'lodash'
-
 export class Or8Way extends CompoundDevice {
-  readonly in: Bus8
-  readonly out: Pin
+  readonly in = this.makeInBus(8, 'in')
+  readonly out = this.makeOutPin('out')
 
-  private readonly ors: Array<Or>
+  private readonly ors = this.makeDevices(7, Or, 'or')
 
   constructor (engine: Engine, name: string, device?: Device) {
     super(engine, name, device)
-
-    this.in = new Bus8(engine, 'in', this)
-    this.out = new Pin(engine, 'out', this)
-
-    this.ors = _.times(7, n => new Or(engine, `or-${n + 1}`, this))
 
     engine.linkPins(this.in.pins[0], this.ors[0].inA)
     engine.linkPins(this.in.pins[1], this.ors[0].inB)
@@ -34,16 +25,5 @@ export class Or8Way extends CompoundDevice {
     )
 
     engine.linkPins(this.ors[6].out, this.out)
-  }
-
-  getDevices (): Array<Device> {
-    return this.ors
-  }
-
-  getPins (): DevicePins {
-    return [
-      ...inBus(this.in),
-      outPin(this.out)
-    ]
   }
 }

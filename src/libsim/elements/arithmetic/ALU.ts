@@ -1,92 +1,53 @@
-import { CompoundDevice, Device, DevicePins, inBus, inPin, outBus, outPin } from '@/libsim/Devices'
+import { CompoundDevice, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
-import { Bus16 } from '@/libsim/Buses'
-import { FalsePin, Pin } from '@/libsim/Pins'
 import { Mux16 } from '@/libsim/elements/selectors/Mux16'
-
-import _ from 'lodash'
 import { Not16 } from '@/libsim/elements/logic/Not16'
 import { And16 } from '@/libsim/elements/logic/And16'
 import { Adder16 } from '@/libsim/elements/arithmetic/Adder16'
 import { Or16Way } from '@/libsim/elements/logic/Or16Way'
 import { Not } from '@/libsim/elements/logic/Not'
 
+import _ from 'lodash'
+
 export class ALU extends CompoundDevice {
-  readonly inX: Bus16
-  readonly inY: Bus16
-  readonly out: Bus16
+  readonly inX = this.makeInBus(16, 'inX')
+  readonly inY = this.makeInBus(16, 'inY')
+  readonly out = this.makeOutBus(16, 'out')
 
-  readonly zx: Pin
-  readonly zy: Pin
-  readonly nx: Pin
-  readonly ny: Pin
-  readonly f: Pin
-  readonly no: Pin
+  readonly zx = this.makeInPin('zx')
+  readonly zy = this.makeInPin('zy')
+  readonly nx = this.makeInPin('nx')
+  readonly ny = this.makeInPin('ny')
+  readonly f = this.makeInPin('f')
+  readonly no = this.makeInPin('no')
 
-  readonly zr: Pin
-  readonly ng: Pin
+  readonly zr = this.makeOutPin('zr')
+  readonly ng = this.makeOutPin('ng')
 
-  private readonly zeroXMux: Mux16
-  private readonly zeroYMux: Mux16
+  private readonly zeroXMux = this.makeDevice(Mux16, 'zeroXMux')
+  private readonly zeroYMux = this.makeDevice(Mux16, 'zeroYMux')
 
-  private readonly invertXNot: Not16
-  private readonly invertYNot: Not16
+  private readonly invertXNot = this.makeDevice(Not16, 'invertXNot')
+  private readonly invertYNot = this.makeDevice(Not16, 'invertYNot')
 
-  private readonly invertXMux: Mux16
-  private readonly invertYMux: Mux16
+  private readonly invertXMux = this.makeDevice(Mux16, 'invertXMux')
+  private readonly invertYMux = this.makeDevice(Mux16, 'invertYMux')
 
-  private readonly falsePin: FalsePin
+  private readonly falsePin = this.makeFalsePin('falsePin')
 
-  private readonly and16: And16
-  private readonly adder16: Adder16
+  private readonly and16 = this.makeDevice(And16, 'and16')
+  private readonly adder16 = this.makeDevice(Adder16, 'adder16')
 
-  private readonly resultMux: Mux16
+  private readonly resultMux = this.makeDevice(Mux16, 'resultMux')
 
-  private readonly resultInvertNot: Not16
-  private readonly resultInvertMux: Mux16
+  private readonly resultInvertNot = this.makeDevice(Not16, 'resultInvertNot')
+  private readonly resultInvertMux = this.makeDevice(Mux16, 'resultInvertMux')
 
-  private readonly resultZeroOr: Or16Way
-  private readonly resultZeroNot: Not
+  private readonly resultZeroOr = this.makeDevice(Or16Way, 'resultZeroOr')
+  private readonly resultZeroNot = this.makeDevice(Not, 'resultZeroNot')
 
   constructor (engine: Engine, name: string, device?: Device) {
     super(engine, name, device)
-    this.inX = this.makeBus16('inX')
-    this.inY = this.makeBus16('inY')
-    this.out = this.makeBus16('out')
-
-    this.zx = this.makePin('zx')
-    this.zy = this.makePin('zy')
-
-    this.nx = this.makePin('nx')
-    this.ny = this.makePin('ny')
-
-    this.f = this.makePin('f')
-
-    this.no = this.makePin('no')
-
-    this.zr = this.makePin('zr')
-    this.ng = this.makePin('ng')
-
-    this.falsePin = new FalsePin(engine, 'falsePin', this)
-
-    this.zeroXMux = new Mux16(engine, 'zeroXMux', this)
-    this.zeroYMux = new Mux16(engine, 'zeroXMux', this)
-
-    this.invertXNot = new Not16(engine, 'invertXNot', this)
-    this.invertYNot = new Not16(engine, 'invertYNot', this)
-
-    this.invertXMux = new Mux16(engine, 'invertXMux', this)
-    this.invertYMux = new Mux16(engine, 'invertYMux', this)
-
-    this.and16 = new And16(engine, 'and16', this)
-    this.adder16 = new Adder16(engine, 'adder16', this)
-    this.resultMux = new Mux16(engine, 'resultMux', this)
-
-    this.resultInvertNot = new Not16(engine, 'resultInvertNot', this)
-    this.resultInvertMux = new Mux16(engine, 'resultInvertMux', this)
-
-    this.resultZeroOr = new Or16Way(engine, 'resultZeroOr', this)
-    this.resultZeroNot = new Not(engine, 'resultZeroNot', this)
 
     const falseBus = _.times(16, () => this.falsePin)
 
@@ -139,37 +100,5 @@ export class ALU extends CompoundDevice {
     engine.linkBuses(this.resultInvertMux.out, this.resultZeroOr.in)
     engine.linkPins(this.resultZeroOr.out, this.resultZeroNot.in)
     engine.linkPins(this.resultZeroNot.out, this.zr)
-  }
-
-  getPins (): DevicePins {
-    return [
-      ...inBus(this.inX),
-      ...inBus(this.inY),
-      ...outBus(this.out),
-      inPin(this.zx),
-      inPin(this.zy),
-      inPin(this.nx),
-      inPin(this.ny),
-      inPin(this.f),
-      inPin(this.no),
-      outPin(this.zr),
-      outPin(this.ng)
-    ]
-  }
-
-  getDevices (): Array<Device> {
-    return [
-      this.zeroXMux,
-      this.zeroYMux,
-      this.invertXMux,
-      this.invertXNot,
-      this.invertYMux,
-      this.invertYNot,
-      this.adder16,
-      this.and16,
-      this.resultMux,
-      this.resultInvertNot,
-      this.resultInvertMux
-    ]
   }
 }

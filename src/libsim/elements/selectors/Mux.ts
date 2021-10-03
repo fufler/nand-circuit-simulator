@@ -1,33 +1,22 @@
-import { CompoundDevice, Device, DevicePins, inPin, outPin } from '@/libsim/Devices'
-import { Pin } from '@/libsim/Pins'
+import { CompoundDevice, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
 import { Or } from '@/libsim/elements/logic/Or'
 import { And } from '@/libsim/elements/logic/And'
 import { Not } from '@/libsim/elements/logic/Not'
 
 export class Mux extends CompoundDevice {
-  readonly inA: Pin
-  readonly inB: Pin
-  readonly sel: Pin
-  readonly out: Pin
+  readonly inA = this.makeInPin('inA')
+  readonly inB = this.makeInPin('inB')
+  readonly sel = this.makeInPin('sel')
+  readonly out = this.makeOutPin('out')
 
-  private readonly or: Or
-  private readonly not: Not
-  private readonly andA: And
-  private readonly andB: And
+  private readonly or = this.makeDevice(Or, 'or')
+  private readonly not = this.makeDevice(Not, 'not')
+  private readonly andA = this.makeDevice(And, 'andA')
+  private readonly andB = this.makeDevice(And, 'andB')
 
   constructor (engine: Engine, name: string, device?: Device) {
     super(engine, name, device)
-
-    this.inA = new Pin(engine, 'inA', this)
-    this.inB = new Pin(engine, 'inB', this)
-    this.sel = new Pin(engine, 'sel', this)
-    this.out = new Pin(engine, 'out', this)
-
-    this.andA = new And(engine, 'andA', this)
-    this.andB = new And(engine, 'andB', this)
-    this.or = new Or(engine, 'or', this)
-    this.not = new Not(engine, 'not', this)
 
     engine.linkPins(this.sel, this.not.in)
 
@@ -40,18 +29,5 @@ export class Mux extends CompoundDevice {
     engine.linkPins(this.andA.out, this.or.inA)
     engine.linkPins(this.andB.out, this.or.inB)
     engine.linkPins(this.or.out, this.out)
-  }
-
-  getPins (): DevicePins {
-    return [
-      inPin(this.inA),
-      inPin(this.inB),
-      inPin(this.sel),
-      outPin(this.out)
-    ]
-  }
-
-  getDevices (): Array<Device> {
-    return [this.not, this.andA, this.andB, this.or]
   }
 }

@@ -1,22 +1,14 @@
-import { CompoundDevice, Device, DevicePins, inBus, outBus } from '@/libsim/Devices'
+import { CompoundDevice, Device } from '@/libsim/Devices'
 import { Engine } from '@/libsim/Engine'
-
-import _ from 'lodash'
 import { Not } from '@/libsim/elements/logic/Not'
-import { Bus16 } from '@/libsim/Buses'
 
 export class Not16 extends CompoundDevice {
-  readonly in: Bus16
-  readonly out: Bus16
-  private readonly nots: Array<Not>
+  readonly in = this.makeInBus(16, 'in')
+  readonly out = this.makeOutBus(16, 'out')
+  private readonly nots = this.makeDevices(16, Not, 'not')
 
   constructor (engine: Engine, name: string, device?: Device) {
     super(engine, name, device)
-
-    this.in = new Bus16(engine, 'in', this)
-    this.out = new Bus16(engine, 'out', this)
-
-    this.nots = _.times(16, n => new Not(engine, `not-${n + 1}`, this))
 
     engine.linkBuses(
       this.in,
@@ -27,16 +19,5 @@ export class Not16 extends CompoundDevice {
       this.nots.map(a => a.out),
       this.out
     )
-  }
-
-  getDevices (): Array<Device> {
-    return this.nots
-  }
-
-  getPins (): DevicePins {
-    return [
-      ...inBus(this.in),
-      ...outBus(this.out)
-    ]
   }
 }
