@@ -17,6 +17,14 @@ export class Bus8 implements Bus {
   }
 }
 
+export class Bus2 implements Bus {
+  readonly pins: Array<Pin>
+
+  constructor (engine: Engine, name?: string, device?: Device) {
+    this.pins = _.times(2, n => new Pin(engine, `${name ?? 'bus'}-${n}`, device))
+  }
+}
+
 export class Bus16 implements Bus {
   readonly pins: Array<Pin>
 
