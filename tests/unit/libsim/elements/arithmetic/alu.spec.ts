@@ -1,6 +1,6 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, SIGNALS6, toPins } from '../utils'
+import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, SIGNALS6, toPins } from '../utils'
 
 import _ from 'lodash'
 import { ALU } from '@/libsim/elements/arithmetic/ALU'
@@ -16,7 +16,7 @@ const INPUT = [
 ]
   .flatMap(v => SIGNALS6.map(x => [...x, ...v]))
 
-makeSpec(
+makeDeviceSpec(
   'ALU',
   (engine: Engine) => new ALU(engine, 'alu'),
   (input: Record<string, Signal>) => {

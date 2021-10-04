@@ -1,9 +1,9 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { makeSpec } from '../utils'
+import { makeDeviceSpec } from '../utils'
 import { DMux } from '@/libsim/elements/selectors/DMux'
 
-makeSpec(
+makeDeviceSpec(
   'DMux',
   (engine: Engine) => new DMux(engine, 'dmux'),
   (input) => {

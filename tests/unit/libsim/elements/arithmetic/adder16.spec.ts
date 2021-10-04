@@ -1,13 +1,13 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, toPins } from '../utils'
+import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, toPins } from '../utils'
 
 import _ from 'lodash'
 import { Adder16 } from '@/libsim/elements/arithmetic/Adder16'
 
 const RANDOM_INPUT = _.times(50, () => [randomNumber16(1), randomNumber16()])
 
-makeSpec(
+makeDeviceSpec(
   'Adder16',
   (engine: Engine) => new Adder16(engine, 'adder16'),
   (input: Record<string, Signal>) => {

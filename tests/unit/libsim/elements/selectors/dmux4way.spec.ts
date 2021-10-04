@@ -1,11 +1,11 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { fromPins, makeSpec } from '../utils'
+import { fromPins, makeDeviceSpec } from '../utils'
 import { DMux4Way } from '@/libsim/elements/selectors/DMux4Way'
 
 import _ from 'lodash'
 
-makeSpec(
+makeDeviceSpec(
   'DMux4Way',
   (engine: Engine) => new DMux4Way(engine, 'dmux4way'),
   (input) => {

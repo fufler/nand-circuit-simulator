@@ -1,6 +1,6 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, SIGNALS3, toPins } from '../utils'
+import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, SIGNALS3, toPins } from '../utils'
 
 import _ from 'lodash'
 import { Mux8Way16 } from '@/libsim/elements/selectors/Mux8Way16'
@@ -9,7 +9,7 @@ const RANDOM_INPUT = _(10)
   .times(() => _.times(8, randomNumber16))
   .flatMap(values => SIGNALS3.map(s => [...s, ...values]))
 
-makeSpec(
+makeDeviceSpec(
   'Mux8Way16',
   (engine: Engine) => new Mux8Way16(engine, 'Mux8Way16'),
   (input: Record<string, Signal>) => {

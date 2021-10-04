@@ -1,9 +1,9 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { makeSpec } from '../utils'
+import { makeDeviceSpec } from '../utils'
 import { HalfAdder } from '@/libsim/elements/arithmetic/HalfAdder'
 
-makeSpec(
+makeDeviceSpec(
   'HalfAdder',
   (engine: Engine) => new HalfAdder(engine, 'halfAdder'),
   ({ inA, inB }) => {

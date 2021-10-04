@@ -109,7 +109,7 @@ export const groupByPrefixFormatter = (re: RegExp): SignalFormatter => (signal: 
 export const wrap2In1Out = (impl: Device2In1OutImplementationFunction): DeviceImplementationFunction =>
   ({ inA, inB }) => ({ out: impl(inA, inB) })
 
-export const makeSpec = (name: string, provider: DeviceProvider, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals, signalFormatter?: SignalFormatter): Suite => describe(name, () => {
+export const makeDeviceSpec = (name: string, provider: DeviceProvider, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals, signalFormatter?: SignalFormatter): Suite => describe(name, () => {
   const engine = new Engine()
 
   const device = provider(engine)

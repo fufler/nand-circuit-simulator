@@ -1,6 +1,6 @@
 import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeSpec, randomNumber16, toPins } from '../utils'
+import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, toPins } from '../utils'
 
 import _ from 'lodash'
 import { Mux16 } from '@/libsim/elements/selectors/Mux16'
@@ -12,7 +12,7 @@ const RANDOM_INPUT = _(50)
     [Signal.HIGH, ...values]
   ])
 
-makeSpec(
+makeDeviceSpec(
   'Mux16',
   (engine: Engine) => new Mux16(engine, 'Mux16'),
   (input: Record<string, Signal>) => {
