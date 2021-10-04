@@ -1,5 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, SIGNALS6, toPins } from '../utils'
+import { fromPins, makeDeviceSpec, randomNumber16, SIGNALS6, toPins } from '../utils'
 
 import _ from 'lodash'
 import { ALU } from '@/libsim/elements/arithmetic/ALU'
@@ -57,4 +57,4 @@ makeDeviceSpec(ALU, (input: Record<string, Signal>) => {
   no,
   ...toPins('inX-', a),
   ...toPins('inY-', b)
-})), groupByPrefixFormatter(/(in\w|out)-(\d)/))
+})))

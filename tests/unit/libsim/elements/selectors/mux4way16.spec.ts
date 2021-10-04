@@ -1,5 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, SIGNALS2, toPins } from '../utils'
+import { fromPins, makeDeviceSpec, randomNumber16, SIGNALS2, toPins } from '../utils'
 
 import _ from 'lodash'
 import { Mux4Way16 } from '@/libsim/elements/selectors/Mux4Way16'
@@ -24,4 +24,4 @@ makeDeviceSpec(Mux4Way16, (input: Record<string, Signal>) => {
   ...toPins('inB-', b),
   ...toPins('inC-', c),
   ...toPins('inD-', d)
-})), groupByPrefixFormatter(/(sel|in\w|out)-(\d)/))
+})))

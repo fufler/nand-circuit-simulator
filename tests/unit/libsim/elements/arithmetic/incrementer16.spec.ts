@@ -1,5 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, toPins } from '../utils'
+import { fromPins, makeDeviceSpec, randomNumber16, toPins } from '../utils'
 
 import _ from 'lodash'
 import { Incrementer16 } from '@/libsim/elements/arithmetic/Incrementer16'
@@ -14,4 +14,4 @@ makeDeviceSpec(Incrementer16, (input: Record<string, Signal>) => {
   0,
   65535,
   ...RANDOM_INPUT
-].map(a => toPins('in-', a)), groupByPrefixFormatter(/(in|out)-(\d)/))
+].map(a => toPins('in-', a)))

@@ -12,8 +12,6 @@ type MultiPinSignals = Array<Array<Signal>>
 type NamedMultiPinSignal = Record<string, Signal>
 type NamedMultiPinSignals = Array<NamedMultiPinSignal>
 
-type SignalFormatter = (signal: NamedMultiPinSignal) => string
-
 export const randomNumber8 = (start = 0): number => start + Math.ceil(Math.random() * (255 - start))
 export const randomNumber16 = (start = 0): number => start + Math.ceil(Math.random() * (65535 - start))
 
@@ -35,11 +33,6 @@ export const SIGNALS2 = makeSignals(2)
 export const SIGNALS3 = makeSignals(3)
 export const SIGNALS6 = makeSignals(6)
 
-const pinsToString = (signal: NamedMultiPinSignal): string => _(signal)
-  .toPairs()
-  .map(([k, v]) => `${k} = ${v}`)
-  .join(', ')
-
 export const toPins = (prefix: string, value: number): Record<string, Signal> => {
   const pins: Record<string, Signal> = {}
 
@@ -60,48 +53,47 @@ export const fromPins = (pins: Record<string, Signal>, prefix: string): number =
     0
   )
 
-export const groupByPrefixFormatter = (re: RegExp): SignalFormatter => (signal: NamedMultiPinSignal): string => {
-  const matched: Array<[string, string, number | string]> = []
-  const notMatched: Array<string> = []
+function formatSignals (device: Device, signals: Array<Map<string, Signal>>): Array<string> {
+  const busesPins: Record<string, [string, number]> = {}
+  const busesLengths: Record<string, number> = {}
 
-  for (const key of _.keys(signal)) {
-    const m = key.match(re)
+  for (const bus of device.getBuses()) {
+    busesLengths[bus.name] = bus.pins.length
 
-    if (m == null) {
-      notMatched.push(key)
-      continue
-    }
-
-    const name = m[0]
-    const group = m[1]
-    const index = m[2]
-
-    if (name != null && group != null && index != null) {
-      matched.push([name, group, parseInt(index, 10)])
+    for (let i = 0; i < bus.pins.length; i++) {
+      busesPins[bus.pins[i].name] = [bus.name, i]
     }
   }
 
-  const groupedValues = _(matched)
-    .groupBy(m => m[1])
-    .mapValues(gm =>
-      _(gm)
-        .sortBy(m => m[2])
-        .map(m => m[0])
-        .reduce(
-          (acc, f) => signal[f] + acc,
-          ''
-        )
-    )
-    .value()
+  const result = []
 
-  for (const v of notMatched) {
-    groupedValues[v] = signal[v].toString()
+  for (const signalsSet of signals) {
+    const values: Record<string, Array<Signal | undefined>> = {}
+
+    for (const [pinName, signal] of _.toPairs(signalsSet)) {
+      const pinInfo = busesPins[pinName]
+
+      if (pinInfo !== undefined) {
+        const [busName, pinIndex] = pinInfo
+        const value = values[busName] ?? _.times(<number>busesLengths[busName], () => undefined)
+
+        value[pinIndex] = signal
+
+        values[busName] = value
+      } else {
+        values[pinName] = [signal]
+      }
+    }
+
+    const formattedValues = _(values)
+      .toPairs()
+      .map(p => `${p[0]} = ${p[1].map(v => (v ?? '?').toString()).reverse().join('')}`)
+      .join(', ')
+
+    result.push(formattedValues)
   }
 
-  return _(groupedValues)
-    .toPairs()
-    .map(([k, v]) => `${k} = ${v}`)
-    .join(', ')
+  return result
 }
 
 export const wrap2In1Out = (impl: Device2In1OutImplementationFunction): DeviceImplementationFunction =>
@@ -110,7 +102,7 @@ export const wrap2In1Out = (impl: Device2In1OutImplementationFunction): DeviceIm
     inB
   }) => ({ out: impl(inA, inB) })
 
-export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals, signalFormatter?: SignalFormatter): void {
+export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals): void {
   describe(ctor.name, () => {
     const engine = new Engine()
 
@@ -140,8 +132,6 @@ export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, im
 
     const inputSignals: MultiPinSignals = customSignals?.map(sigs => inputPins.map(p => sigs[p.name])) ?? makeSignals(inputPins.length)
 
-    const formatter = signalFormatter ?? pinsToString
-
     for (const signals of inputSignals) {
       const input = _(inputPins)
         .map((p, idx) => [p.name, signals[idx]])
@@ -150,7 +140,9 @@ export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, im
 
       const expectedOut = impl(input)
 
-      it(`${ctor.name}(${formatter(input)}) === { ${formatter(expectedOut)} }`, async () => {
+      const [formattedInput, formattedOutput] = formatSignals(device, [input, expectedOut])
+
+      it(`${ctor.name}(${(formattedInput)}) === { ${formattedOutput} }`, async () => {
         for (let i = 0; i < signals.length; i++) {
           inputPins[i].setSignal(signals[i])
         }

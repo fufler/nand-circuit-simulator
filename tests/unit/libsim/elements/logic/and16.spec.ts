@@ -1,5 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, toPins } from '../utils'
+import { fromPins, makeDeviceSpec, randomNumber16, toPins } from '../utils'
 
 import _ from 'lodash'
 import { And16 } from '@/libsim/elements/logic/And16'
@@ -16,4 +16,4 @@ makeDeviceSpec(And16, (input: Record<string, Signal>) => {
 }, RANDOM_INPUT.map(([a, b]) => ({
   ...toPins('inA-', a),
   ...toPins('inB-', b)
-})), groupByPrefixFormatter(/(in\w|out)-(\d)/))
+})))
