@@ -38,10 +38,19 @@ export class Engine {
 
   private devicesConstructors: Map<string, DeviceConstructor> = new Map()
 
-  async run (callback?: ((e: CircuitElement) => boolean), sleepInterval?: number, maxIterations?: number): Promise<boolean> {
-    let iterationsLeft = maxIterations ?? this.pinsLinks.size * 4
+  async run (callback?: ((e: CircuitElement) => boolean), sleepInterval?: number, executionLimit = 100): Promise<boolean> {
+    let iterationCounter = 0
+    const startTime = Date.now()
 
-    while (this.queue.length > 0 && iterationsLeft-- > 0) {
+    const shouldContinue = () => {
+      if (++iterationCounter % 1000 !== 0) {
+        return true
+      }
+
+      return Date.now() - startTime <= executionLimit
+    }
+
+    while (this.queue.length > 0 && shouldContinue()) {
       const [e] = this.queue.splice(0, 1)
 
       if (e.propagate() && e instanceof Pin) {
