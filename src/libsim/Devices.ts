@@ -26,6 +26,7 @@ export abstract class Device extends CircuitElement implements DevicePart {
   readonly device?: Device
 
   abstract getPins (): DevicePins
+  abstract getBuses (): Array<Bus>
 
   abstract getDevices (): Array<Device>
 
@@ -54,10 +55,6 @@ export abstract class Device extends CircuitElement implements DevicePart {
 export abstract class CustomLogicDevice extends Device {
   readonly hasCustomLogic = true
 
-  abstract getPins (): DevicePins
-
-  abstract propagate (): boolean
-
   getDevices (): Array<Device> {
     return []
   }
@@ -67,6 +64,7 @@ export abstract class CompoundDevice extends Device {
   readonly hasCustomLogic = false
 
   private pins: DevicePins = []
+  private buses: Array<Bus> = []
   private devices: Array<Device> = []
 
   private storePin<T extends Pin> (pin: T, type: DevicePinType): T {
@@ -92,6 +90,8 @@ export abstract class CompoundDevice extends Device {
 
   private makeBus (length: number, name: string, type: DevicePinType): Bus {
     const bus = new Bus(length, this.engine, name, this)
+
+    this.buses.push(bus)
 
     bus.pins.forEach(p => this.storePin(p, type))
 
@@ -137,6 +137,10 @@ export abstract class CompoundDevice extends Device {
 
   getPins (): DevicePins {
     return this.pins
+  }
+
+  getBuses (): Array<Bus> {
+    return this.buses
   }
 
   getDevices (): Array<Device> {

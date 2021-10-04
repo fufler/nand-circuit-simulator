@@ -1,6 +1,7 @@
 import { Engine } from '@/libsim/Engine'
 import { Pin, Signal, UpdatablePin } from '@/libsim/Pins'
 import { CustomLogicDevice, Device, DevicePins, DevicePinType } from '@/libsim/Devices'
+import { Bus } from '@/libsim/Buses'
 
 export class Nand extends CustomLogicDevice {
   readonly inA: Pin
@@ -30,6 +31,10 @@ export class Nand extends CustomLogicDevice {
       [this.inB, DevicePinType.INPUT],
       [this.out, DevicePinType.OUTPUT]
     ]
+  }
+
+  getBuses (): Array<Bus> {
+    return []
   }
 
   init (): void {
