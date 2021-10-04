@@ -1,12 +1,10 @@
 import { Engine } from '@/libsim/Engine'
 import { Pin, Signal, UpdatablePin } from '@/libsim/Pins'
 import { expect } from 'chai'
-import { Suite } from 'mocha'
-import { Device, DevicePinType } from '@/libsim/Devices'
+import { Device, DeviceConstructor, DevicePinType } from '@/libsim/Devices'
 
 import _ from 'lodash'
 
-export type DeviceProvider = ((engine: Engine) => Device)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DeviceImplementationFunction = (input: any) => any
 type Device2In1OutImplementationFunction = (inA: Signal, inB: Signal) => Signal
@@ -107,58 +105,64 @@ export const groupByPrefixFormatter = (re: RegExp): SignalFormatter => (signal: 
 }
 
 export const wrap2In1Out = (impl: Device2In1OutImplementationFunction): DeviceImplementationFunction =>
-  ({ inA, inB }) => ({ out: impl(inA, inB) })
+  ({
+    inA,
+    inB
+  }) => ({ out: impl(inA, inB) })
 
-export const makeDeviceSpec = (name: string, provider: DeviceProvider, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals, signalFormatter?: SignalFormatter): Suite => describe(name, () => {
-  const engine = new Engine()
+export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals, signalFormatter?: SignalFormatter): void {
+  describe(ctor.name, () => {
+    const engine = new Engine()
 
-  const device = provider(engine)
+    // eslint-disable-next-line new-cap
+    const device = new ctor(engine, ctor.name)
 
-  device.init()
+    device.init()
 
-  const inputPins: Array<UpdatablePin> = []
-  const outputPins: Array<Pin> = []
+    const inputPins: Array<UpdatablePin> = []
+    const outputPins: Array<Pin> = []
 
-  for (const [pin, type] of device.getPins()) {
-    if (type === DevicePinType.INTERNAL) {
-      continue
-    }
-
-    if (type === DevicePinType.INPUT) {
-      const p = new UpdatablePin(engine, pin.name)
-      inputPins.push(p)
-      engine.linkPins(p, pin)
-    } else {
-      const p = new Pin(engine, pin.name)
-      outputPins.push(p)
-      engine.linkPins(pin, p)
-    }
-  }
-
-  const inputSignals: MultiPinSignals = customSignals?.map(sigs => inputPins.map(p => sigs[p.name])) ?? makeSignals(inputPins.length)
-
-  const formatter = signalFormatter ?? pinsToString
-
-  for (const signals of inputSignals) {
-    const input = _(inputPins)
-      .map((p, idx) => [p.name, signals[idx]])
-      .fromPairs()
-      .value()
-
-    const expectedOut = impl(input)
-
-    it(`${name}(${formatter(input)}) === { ${formatter(expectedOut)} }`, async () => {
-      for (let i = 0; i < signals.length; i++) {
-        inputPins[i].setSignal(signals[i])
+    for (const [pin, type] of device.getPins()) {
+      if (type === DevicePinType.INTERNAL) {
+        continue
       }
 
-      expect(await engine.run()).to.be.true
+      if (type === DevicePinType.INPUT) {
+        const p = new UpdatablePin(engine, pin.name)
+        inputPins.push(p)
+        engine.linkPins(p, pin)
+      } else {
+        const p = new Pin(engine, pin.name)
+        outputPins.push(p)
+        engine.linkPins(pin, p)
+      }
+    }
 
-      for (const pin of outputPins) {
-        if (expectedOut[pin.name] !== undefined) {
-          expect(pin.getSignal()).to.be.equal(expectedOut[pin.name], pin.name)
+    const inputSignals: MultiPinSignals = customSignals?.map(sigs => inputPins.map(p => sigs[p.name])) ?? makeSignals(inputPins.length)
+
+    const formatter = signalFormatter ?? pinsToString
+
+    for (const signals of inputSignals) {
+      const input = _(inputPins)
+        .map((p, idx) => [p.name, signals[idx]])
+        .fromPairs()
+        .value()
+
+      const expectedOut = impl(input)
+
+      it(`${ctor.name}(${formatter(input)}) === { ${formatter(expectedOut)} }`, async () => {
+        for (let i = 0; i < signals.length; i++) {
+          inputPins[i].setSignal(signals[i])
         }
-      }
-    })
-  }
-})
+
+        expect(await engine.run()).to.be.true
+
+        for (const pin of outputPins) {
+          if (expectedOut[pin.name] !== undefined) {
+            expect(pin.getSignal()).to.be.equal(expectedOut[pin.name], pin.name)
+          }
+        }
+      })
+    }
+  })
+}

@@ -18,6 +18,8 @@ export enum DevicePinType {
 export type DevicePin = [Pin, DevicePinType]
 export type DevicePins = Array<DevicePin>
 
+export type DeviceConstructor<T extends Device> = new (engine: Engine, name: string, device?: Device) => T
+
 export abstract class Device extends CircuitElement implements DevicePart {
   protected engine: Engine
   readonly name: string
@@ -104,7 +106,7 @@ export abstract class CompoundDevice extends Device {
     return this.makeBus(length, name, DevicePinType.OUTPUT)
   }
 
-  protected makeDevices<T extends Device> (count: number, ctor: (new (engine: Engine, name: string, device?: Device) => T), name: string): Array<T> {
+  protected makeDevices<T extends Device> (count: number, ctor: DeviceConstructor<T>, name: string): Array<T> {
     // eslint-disable-next-line new-cap
     const devices = _.times(count, n => new ctor(this.engine, `${name}-${n + 1}`, this))
 
@@ -115,7 +117,7 @@ export abstract class CompoundDevice extends Device {
     return devices
   }
 
-  protected makeDevice<T extends Device> (ctor: (new (engine: Engine, name: string, device?: Device) => T), name: string): T {
+  protected makeDevice<T extends Device> (ctor: DeviceConstructor<T>, name: string): T {
     return this.makeDevices(1, ctor, name)[0]
   }
 

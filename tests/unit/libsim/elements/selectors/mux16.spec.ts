@@ -1,4 +1,3 @@
-import { Engine } from '@/libsim/Engine'
 import { Signal } from '@/libsim/Pins'
 import { fromPins, groupByPrefixFormatter, makeDeviceSpec, randomNumber16, toPins } from '../utils'
 
@@ -12,21 +11,15 @@ const RANDOM_INPUT = _(50)
     [Signal.HIGH, ...values]
   ])
 
-makeDeviceSpec(
-  'Mux16',
-  (engine: Engine) => new Mux16(engine, 'Mux16'),
-  (input: Record<string, Signal>) => {
-    const [a, b] = _.map(
-      ['inA-', 'inB-'],
-      p => fromPins(input, p)
-    )
+makeDeviceSpec(Mux16, (input: Record<string, Signal>) => {
+  const [a, b] = _.map(
+    ['inA-', 'inB-'],
+    p => fromPins(input, p)
+  )
 
-    return toPins('out-', input.sel === Signal.LOW ? a : b)
-  },
-  RANDOM_INPUT.map(([sel, a, b]) => ({
-    sel,
-    ...toPins('inA-', a),
-    ...toPins('inB-', b)
-  })),
-  groupByPrefixFormatter(/(in\w|out)-(\d)/)
-)
+  return toPins('out-', input.sel === Signal.LOW ? a : b)
+}, RANDOM_INPUT.map(([sel, a, b]) => ({
+  sel,
+  ...toPins('inA-', a),
+  ...toPins('inB-', b)
+})), groupByPrefixFormatter(/(in\w|out)-(\d)/))
