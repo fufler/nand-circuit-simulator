@@ -28,7 +28,6 @@ export const makeSignals = (n: number): MultiPinSignals => {
   ]
 }
 
-export const SIGNALS = makeSignals(1)
 export const SIGNALS2 = makeSignals(2)
 export const SIGNALS3 = makeSignals(3)
 export const SIGNALS6 = makeSignals(6)
