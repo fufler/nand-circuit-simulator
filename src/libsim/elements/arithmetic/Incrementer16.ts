@@ -13,17 +13,17 @@ export class Incrementer16 extends CompoundDevice {
   private readonly adder = this.makeDevice(Adder16, 'adder')
 
   init (): void {
-    this.linkBuses(
+    this.link(
       this.in,
       this.adder.inA
     )
 
-    this.linkBuses(
+    this.link(
       this.adder.out,
       this.out
     )
 
-    this.linkBuses(
+    this.link(
       [
         this.truePin,
         ..._.times(15, () => this.falsePin)

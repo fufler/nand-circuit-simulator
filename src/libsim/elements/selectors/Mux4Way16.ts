@@ -14,18 +14,18 @@ export class Mux4Way16 extends CompoundDevice {
   private readonly mux = this.makeDevice(Mux16, 'mux')
 
   init (): void {
-    this.linkBuses(this.inA, this.muxAB.inA)
-    this.linkBuses(this.inB, this.muxAB.inB)
-    this.linkPins(this.sel.pins[0], this.muxAB.sel)
+    this.link(this.inA, this.muxAB.inA)
+    this.link(this.inB, this.muxAB.inB)
+    this.link(this.sel.pins[0], this.muxAB.sel)
 
-    this.linkBuses(this.inC, this.muxCD.inA)
-    this.linkBuses(this.inD, this.muxCD.inB)
-    this.linkPins(this.sel.pins[0], this.muxCD.sel)
+    this.link(this.inC, this.muxCD.inA)
+    this.link(this.inD, this.muxCD.inB)
+    this.link(this.sel.pins[0], this.muxCD.sel)
 
-    this.linkBuses(this.muxAB.out, this.mux.inA)
-    this.linkBuses(this.muxCD.out, this.mux.inB)
-    this.linkPins(this.sel.pins[1], this.mux.sel)
+    this.link(this.muxAB.out, this.mux.inA)
+    this.link(this.muxCD.out, this.mux.inB)
+    this.link(this.sel.pins[1], this.mux.sel)
 
-    this.linkBuses(this.mux.out, this.out)
+    this.link(this.mux.out, this.out)
   }
 }

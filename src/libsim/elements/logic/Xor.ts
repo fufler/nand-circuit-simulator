@@ -8,18 +8,18 @@ export class Xor extends Compound2In1OutDevice {
   private readonly nand = this.makeDevice(Nand, 'nand')
 
   init (): void {
-    this.linkPins(this.inA, this.nandAB.inA)
-    this.linkPins(this.inB, this.nandAB.inB)
+    this.link(this.inA, this.nandAB.inA)
+    this.link(this.inB, this.nandAB.inB)
 
-    this.linkPins(this.inA, this.nandA.inA)
-    this.linkPins(this.nandAB.out, this.nandA.inB)
+    this.link(this.inA, this.nandA.inA)
+    this.link(this.nandAB.out, this.nandA.inB)
 
-    this.linkPins(this.inB, this.nandB.inB)
-    this.linkPins(this.nandAB.out, this.nandB.inA)
+    this.link(this.inB, this.nandB.inB)
+    this.link(this.nandAB.out, this.nandB.inA)
 
-    this.linkPins(this.nandA.out, this.nand.inA)
-    this.linkPins(this.nandB.out, this.nand.inB)
+    this.link(this.nandA.out, this.nand.inA)
+    this.link(this.nandB.out, this.nand.inB)
 
-    this.linkPins(this.nand.out, this.out)
+    this.link(this.nand.out, this.out)
   }
 }

@@ -19,30 +19,30 @@ export class DMux8Way extends CompoundDevice {
   private readonly dmuxEFGH = this.makeDevice(DMux4Way, 'dmuxEFGH')
 
   init (): void {
-    this.linkPins(this.sel.pins[2], this.dmux.sel)
+    this.link(this.sel.pins[2], this.dmux.sel)
 
-    this.linkPins(this.in, this.dmux.in)
-    this.linkPins(this.dmux.outA, this.dmuxABCD.in)
-    this.linkPins(this.dmux.outB, this.dmuxEFGH.in)
+    this.link(this.in, this.dmux.in)
+    this.link(this.dmux.outA, this.dmuxABCD.in)
+    this.link(this.dmux.outB, this.dmuxEFGH.in)
 
-    this.linkBuses(
+    this.link(
       this.sel.pins.slice(0, 2),
       this.dmuxABCD.sel
     )
 
-    this.linkBuses(
+    this.link(
       this.sel.pins.slice(0, 2),
       this.dmuxEFGH.sel
     )
 
-    this.linkPins(this.dmuxABCD.outA, this.outA)
-    this.linkPins(this.dmuxABCD.outB, this.outB)
-    this.linkPins(this.dmuxABCD.outC, this.outC)
-    this.linkPins(this.dmuxABCD.outD, this.outD)
+    this.link(this.dmuxABCD.outA, this.outA)
+    this.link(this.dmuxABCD.outB, this.outB)
+    this.link(this.dmuxABCD.outC, this.outC)
+    this.link(this.dmuxABCD.outD, this.outD)
 
-    this.linkPins(this.dmuxEFGH.outA, this.outE)
-    this.linkPins(this.dmuxEFGH.outB, this.outF)
-    this.linkPins(this.dmuxEFGH.outC, this.outG)
-    this.linkPins(this.dmuxEFGH.outD, this.outH)
+    this.link(this.dmuxEFGH.outA, this.outE)
+    this.link(this.dmuxEFGH.outB, this.outF)
+    this.link(this.dmuxEFGH.outC, this.outG)
+    this.link(this.dmuxEFGH.outD, this.outH)
   }
 }

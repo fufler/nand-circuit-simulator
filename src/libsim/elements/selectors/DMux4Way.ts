@@ -14,18 +14,18 @@ export class DMux4Way extends CompoundDevice {
   private readonly dmuxCD = this.makeDevice(DMux, 'dmuxCD')
 
   init (): void {
-    this.linkPins(this.in, this.dmux.in)
-    this.linkPins(this.sel.pins[1], this.dmux.sel)
+    this.link(this.in, this.dmux.in)
+    this.link(this.sel.pins[1], this.dmux.sel)
 
-    this.linkPins(this.dmux.outA, this.dmuxAB.in)
-    this.linkPins(this.dmux.outB, this.dmuxCD.in)
+    this.link(this.dmux.outA, this.dmuxAB.in)
+    this.link(this.dmux.outB, this.dmuxCD.in)
 
-    this.linkPins(this.sel.pins[0], this.dmuxAB.sel)
-    this.linkPins(this.sel.pins[0], this.dmuxCD.sel)
+    this.link(this.sel.pins[0], this.dmuxAB.sel)
+    this.link(this.sel.pins[0], this.dmuxCD.sel)
 
-    this.linkPins(this.dmuxAB.outA, this.outA)
-    this.linkPins(this.dmuxAB.outB, this.outB)
-    this.linkPins(this.dmuxCD.outA, this.outC)
-    this.linkPins(this.dmuxCD.outB, this.outD)
+    this.link(this.dmuxAB.outA, this.outA)
+    this.link(this.dmuxAB.outB, this.outB)
+    this.link(this.dmuxCD.outA, this.outC)
+    this.link(this.dmuxCD.outB, this.outD)
   }
 }

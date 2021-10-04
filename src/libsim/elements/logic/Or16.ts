@@ -5,17 +5,17 @@ export class Or16 extends Compound2In1OutDevice16 {
   private readonly ors = this.makeDevices(16, Or, 'or')
 
   init (): void {
-    this.linkBuses(
+    this.link(
       this.inA,
       this.ors.map(a => a.inA)
     )
 
-    this.linkBuses(
+    this.link(
       this.inB,
       this.ors.map(a => a.inB)
     )
 
-    this.linkBuses(
+    this.link(
       this.ors.map(a => a.out),
       this.out
     )

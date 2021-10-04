@@ -12,22 +12,22 @@ export class Mux16 extends CompoundDevice {
   private readonly muxes = this.makeDevices(16, Mux, 'mux')
 
   init (): void {
-    this.linkBuses(
+    this.link(
       this.inA,
       this.muxes.map(m => m.inA)
     )
 
-    this.linkBuses(
+    this.link(
       this.inB,
       this.muxes.map(m => m.inB)
     )
 
-    this.linkBuses(
+    this.link(
       this.muxes.map(m => m.out),
       this.out
     )
 
-    this.linkBuses(
+    this.link(
       _.times(16, () => this.sel),
       this.muxes.map(m => m.sel)
     )

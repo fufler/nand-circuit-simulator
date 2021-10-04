@@ -13,15 +13,15 @@ export class DMux extends CompoundDevice {
   private readonly andB = this.makeDevice(And, 'andB')
 
   init (): void {
-    this.linkPins(this.sel, this.not.in)
+    this.link(this.sel, this.not.in)
 
-    this.linkPins(this.in, this.andA.inA)
-    this.linkPins(this.not.out, this.andA.inB)
+    this.link(this.in, this.andA.inA)
+    this.link(this.not.out, this.andA.inB)
 
-    this.linkPins(this.in, this.andB.inB)
-    this.linkPins(this.sel, this.andB.inA)
+    this.link(this.in, this.andB.inB)
+    this.link(this.sel, this.andB.inA)
 
-    this.linkPins(this.andA.out, this.outA)
-    this.linkPins(this.andB.out, this.outB)
+    this.link(this.andA.out, this.outA)
+    this.link(this.andB.out, this.outB)
   }
 }

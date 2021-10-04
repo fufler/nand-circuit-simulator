@@ -14,15 +14,15 @@ export class FullAdder extends CompoundDevice {
   private readonly or = this.makeDevice(Or, 'or')
 
   init (): void {
-    this.linkPins(this.inA, this.halfAdder1.inA)
-    this.linkPins(this.inB, this.halfAdder1.inB)
-    this.linkPins(this.halfAdder1.outSum, this.halfAdder2.inA)
-    this.linkPins(this.inC, this.halfAdder2.inB)
+    this.link(this.inA, this.halfAdder1.inA)
+    this.link(this.inB, this.halfAdder1.inB)
+    this.link(this.halfAdder1.outSum, this.halfAdder2.inA)
+    this.link(this.inC, this.halfAdder2.inB)
 
-    this.linkPins(this.halfAdder2.outSum, this.outSum)
+    this.link(this.halfAdder2.outSum, this.outSum)
 
-    this.linkPins(this.halfAdder1.outCarry, this.or.inA)
-    this.linkPins(this.halfAdder2.outCarry, this.or.inB)
-    this.linkPins(this.or.out, this.outCarry)
+    this.link(this.halfAdder1.outCarry, this.or.inA)
+    this.link(this.halfAdder2.outCarry, this.or.inB)
+    this.link(this.or.out, this.outCarry)
   }
 }

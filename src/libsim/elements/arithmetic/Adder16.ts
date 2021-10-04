@@ -7,24 +7,24 @@ export class Adder16 extends Compound2In1OutDevice16 {
   private readonly falsePin = this.makeFalsePin('false')
 
   init (): void {
-    this.linkPins(this.falsePin, this.fullAdders[0].inC)
+    this.link(this.falsePin, this.fullAdders[0].inC)
 
-    this.linkBuses(
+    this.link(
       this.inA,
       this.fullAdders.map(fa => fa.inA)
     )
 
-    this.linkBuses(
+    this.link(
       this.inB,
       this.fullAdders.map(fa => fa.inB)
     )
 
-    this.linkBuses(
+    this.link(
       this.fullAdders.map(fa => fa.outSum),
       this.out
     )
 
-    this.linkBuses(
+    this.link(
       this.fullAdders.map(fa => fa.outCarry).slice(0, 15),
       this.fullAdders.map(fa => fa.inC).slice(1)
     )

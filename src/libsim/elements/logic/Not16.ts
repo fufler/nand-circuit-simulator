@@ -7,12 +7,12 @@ export class Not16 extends CompoundDevice {
   private readonly nots = this.makeDevices(16, Not, 'not')
 
   init (): void {
-    this.linkBuses(
+    this.link(
       this.in,
       this.nots.map(a => a.in)
     )
 
-    this.linkBuses(
+    this.link(
       this.nots.map(a => a.out),
       this.out
     )

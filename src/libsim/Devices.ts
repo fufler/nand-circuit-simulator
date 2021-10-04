@@ -41,12 +41,8 @@ export abstract class Device extends CircuitElement implements DevicePart {
     this.device = device
   }
 
-  linkPins (src: Pin, dst: Pin): void {
-    this.engine.linkPins(src, dst)
-  }
-
-  linkBuses (src: Bus | PinBus, dst: Bus | PinBus): void {
-    this.engine.linkBuses(src, dst)
+  link (src: Pin | Bus | PinBus, dst: Pin | Bus | PinBus): void {
+    this.engine.link(src, dst)
   }
 
   abstract propagate (): boolean

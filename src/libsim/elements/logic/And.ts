@@ -7,9 +7,9 @@ export class And extends Compound2In1OutDevice {
   private readonly not = this.makeDevice(Not, 'not')
 
   init (): void {
-    this.linkPins(this.inA, this.nand.inA)
-    this.linkPins(this.inB, this.nand.inB)
-    this.linkPins(this.nand.out, this.not.in)
-    this.linkPins(this.not.out, this.out)
+    this.link(this.inA, this.nand.inA)
+    this.link(this.inB, this.nand.inB)
+    this.link(this.nand.out, this.not.in)
+    this.link(this.not.out, this.out)
   }
 }

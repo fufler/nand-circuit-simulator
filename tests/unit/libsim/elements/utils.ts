@@ -121,11 +121,11 @@ export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, im
       if (type === DevicePinType.INPUT) {
         const p = new UpdatablePin(engine, pin.name)
         inputPins.push(p)
-        engine.linkPins(p, pin)
+        engine.link(p, pin)
       } else {
         const p = new Pin(engine, pin.name)
         outputPins.push(p)
-        engine.linkPins(pin, p)
+        engine.link(pin, p)
       }
     }
 

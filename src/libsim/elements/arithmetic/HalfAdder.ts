@@ -12,12 +12,12 @@ export class HalfAdder extends CompoundDevice {
   private readonly xor = this.makeDevice(Xor, 'xor')
 
   init (): void {
-    this.linkPins(this.inA, this.and.inA)
-    this.linkPins(this.inB, this.and.inB)
-    this.linkPins(this.and.out, this.outCarry)
+    this.link(this.inA, this.and.inA)
+    this.link(this.inB, this.and.inB)
+    this.link(this.and.out, this.outCarry)
 
-    this.linkPins(this.inA, this.xor.inA)
-    this.linkPins(this.inB, this.xor.inB)
-    this.linkPins(this.xor.out, this.outSum)
+    this.link(this.inA, this.xor.inA)
+    this.link(this.inB, this.xor.inB)
+    this.link(this.xor.out, this.outSum)
   }
 }

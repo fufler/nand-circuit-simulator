@@ -7,8 +7,8 @@ export class Not extends CompoundDevice {
   readonly out = this.makeOutPin('out')
 
   init (): void {
-    this.linkPins(this.in, this.nand.inA)
-    this.linkPins(this.in, this.nand.inB)
-    this.linkPins(this.nand.out, this.out)
+    this.link(this.in, this.nand.inA)
+    this.link(this.in, this.nand.inB)
+    this.link(this.nand.out, this.out)
   }
 }

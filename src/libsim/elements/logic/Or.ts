@@ -8,12 +8,12 @@ export class Or extends Compound2In1OutDevice {
   private readonly notB = this.makeDevice(Not, 'notB')
 
   init (): void {
-    this.linkPins(this.inA, this.notA.in)
-    this.linkPins(this.inB, this.notB.in)
+    this.link(this.inA, this.notA.in)
+    this.link(this.inB, this.notB.in)
 
-    this.linkPins(this.notA.out, this.nand.inA)
-    this.linkPins(this.notB.out, this.nand.inB)
+    this.link(this.notA.out, this.nand.inA)
+    this.link(this.notB.out, this.nand.inB)
 
-    this.linkPins(this.nand.out, this.out)
+    this.link(this.nand.out, this.out)
   }
 }

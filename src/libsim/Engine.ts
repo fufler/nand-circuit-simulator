@@ -75,7 +75,7 @@ export class Engine {
     this.queue.push(...(Array.isArray(elements) ? elements : [elements]))
   }
 
-  linkPins (src: Pin, dst: Pin): void {
+  private linkPins (src: Pin, dst: Pin): void {
     if (src === dst) {
       throw new LinkError('Self links are not allowed')
     }
@@ -96,9 +96,9 @@ export class Engine {
     this.pinsLinks.set(src, links)
   }
 
-  linkBuses (src: Bus | PinBus, dst: Bus | PinBus): void {
-    const _src = Array.isArray(src) ? src : src.pins
-    const _dst = Array.isArray(dst) ? dst : dst.pins
+  link (src: Pin | Bus | PinBus, dst: Pin | Bus | PinBus): void {
+    const _src = src instanceof Pin ? [src] : Array.isArray(src) ? src : src.pins
+    const _dst = dst instanceof Pin ? [dst] : Array.isArray(dst) ? dst : dst.pins
 
     if (_src.length !== _dst.length) {
       throw new LinkError(`Cannot link buses of different length: ${_src.length} and ${_dst.length}`)
@@ -177,7 +177,7 @@ export class Engine {
       const srcPin = resolvePin(linkDef.srcId)
       const dstPin = resolvePin(linkDef.dstId)
 
-      this.linkPins(srcPin, dstPin)
+      this.link(srcPin, dstPin)
     }
   }
 

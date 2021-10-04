@@ -12,19 +12,19 @@ export class Or16Way extends CompoundDevice {
   private readonly or = this.makeDevice(Or, 'or')
 
   init (): void {
-    this.linkBuses(
+    this.link(
       this.in.pins.slice(0, 8),
       this.orLow.in
     )
 
-    this.linkBuses(
+    this.link(
       this.in.pins.slice(8),
       this.orHigh.in
     )
 
-    this.linkPins(this.orLow.out, this.or.inA)
-    this.linkPins(this.orHigh.out, this.or.inB)
+    this.link(this.orLow.out, this.or.inA)
+    this.link(this.orHigh.out, this.or.inB)
 
-    this.linkPins(this.or.out, this.out)
+    this.link(this.or.out, this.out)
   }
 }

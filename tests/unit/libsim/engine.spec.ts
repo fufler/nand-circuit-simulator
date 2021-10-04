@@ -14,10 +14,10 @@ describe('Engine', () => {
     const pinA = new Pin(engine, 'a')
     const pinB = new Pin(engine, 'b')
 
-    engine.linkPins(pinA, pinB)
+    engine.link(pinA, pinB)
 
     expect(
-      () => engine.linkPins(pinA, pinB)
+      () => engine.link(pinA, pinB)
     ).to.throw(LinkError)
   })
 
@@ -27,7 +27,7 @@ describe('Engine', () => {
     const pin = new Pin(engine, 'a')
 
     expect(
-      () => engine.linkPins(pin, pin)
+      () => engine.link(pin, pin)
     ).to.throw(LinkError)
   })
 
@@ -38,10 +38,10 @@ describe('Engine', () => {
     const pinB = new Pin(engine, 'b')
     const pinC = new Pin(engine, 'c')
 
-    engine.linkPins(pinA, pinB)
+    engine.link(pinA, pinB)
 
     expect(
-      () => engine.linkPins(pinC, pinB)
+      () => engine.link(pinC, pinB)
     ).to.throw(LinkError)
   })
 

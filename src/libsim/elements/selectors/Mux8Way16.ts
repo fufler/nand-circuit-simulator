@@ -19,31 +19,31 @@ export class Mux8Way16 extends CompoundDevice {
   private readonly mux = this.makeDevice(Mux16, 'mux')
 
   init (): void {
-    this.linkBuses(this.inA, this.muxABCD.inA)
-    this.linkBuses(this.inB, this.muxABCD.inB)
-    this.linkBuses(this.inC, this.muxABCD.inC)
-    this.linkBuses(this.inD, this.muxABCD.inD)
+    this.link(this.inA, this.muxABCD.inA)
+    this.link(this.inB, this.muxABCD.inB)
+    this.link(this.inC, this.muxABCD.inC)
+    this.link(this.inD, this.muxABCD.inD)
 
-    this.linkBuses(
+    this.link(
       this.sel.pins.slice(0, 2),
       this.muxABCD.sel
     )
 
-    this.linkBuses(this.inE, this.muxEFGH.inA)
-    this.linkBuses(this.inF, this.muxEFGH.inB)
-    this.linkBuses(this.inG, this.muxEFGH.inC)
-    this.linkBuses(this.inH, this.muxEFGH.inD)
+    this.link(this.inE, this.muxEFGH.inA)
+    this.link(this.inF, this.muxEFGH.inB)
+    this.link(this.inG, this.muxEFGH.inC)
+    this.link(this.inH, this.muxEFGH.inD)
 
-    this.linkBuses(
+    this.link(
       this.sel.pins.slice(0, 2),
       this.muxEFGH.sel
     )
 
-    this.linkBuses(this.muxABCD.out, this.mux.inA)
-    this.linkBuses(this.muxEFGH.out, this.mux.inB)
+    this.link(this.muxABCD.out, this.mux.inA)
+    this.link(this.muxEFGH.out, this.mux.inB)
 
-    this.linkPins(this.sel.pins[2], this.mux.sel)
+    this.link(this.sel.pins[2], this.mux.sel)
 
-    this.linkBuses(this.mux.out, this.out)
+    this.link(this.mux.out, this.out)
   }
 }

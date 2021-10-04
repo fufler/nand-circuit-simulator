@@ -15,16 +15,16 @@ export class Mux extends CompoundDevice {
   private readonly andB = this.makeDevice(And, 'andB')
 
   init (): void {
-    this.linkPins(this.sel, this.not.in)
+    this.link(this.sel, this.not.in)
 
-    this.linkPins(this.inA, this.andA.inA)
-    this.linkPins(this.not.out, this.andA.inB)
+    this.link(this.inA, this.andA.inA)
+    this.link(this.not.out, this.andA.inB)
 
-    this.linkPins(this.inB, this.andB.inB)
-    this.linkPins(this.sel, this.andB.inA)
+    this.link(this.inB, this.andB.inB)
+    this.link(this.sel, this.andB.inA)
 
-    this.linkPins(this.andA.out, this.or.inA)
-    this.linkPins(this.andB.out, this.or.inB)
-    this.linkPins(this.or.out, this.out)
+    this.link(this.andA.out, this.or.inA)
+    this.link(this.andB.out, this.or.inB)
+    this.link(this.or.out, this.out)
   }
 }
