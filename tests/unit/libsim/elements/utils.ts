@@ -16,6 +16,12 @@ type NamedMultiPinSignals = Array<NamedMultiPinSignal>
 export const randomNumber8 = (start = 0): number => start + Math.ceil(Math.random() * (255 - start))
 export const randomNumber16 = (start = 0): number => start + Math.ceil(Math.random() * (65535 - start))
 
+export const generateRandomNumbers = (count: number, tupleLength: number, generator: () => number): number[][] =>
+  _.times(count, () => _.times(tupleLength, generator))
+
+export const generateRandomNumbers8 = (count: number, tupleLength = 1): number[][] => generateRandomNumbers(count, tupleLength, randomNumber8)
+export const generateRandomNumbers16 = (count: number, tupleLength = 1): number[][] => generateRandomNumbers(count, tupleLength, randomNumber16)
+
 export const makeSignals = (n: number): MultiPinSignals => {
   if (n === 1) {
     return [[Signal.LOW], [Signal.HIGH]]
@@ -29,9 +35,11 @@ export const makeSignals = (n: number): MultiPinSignals => {
   ]
 }
 
-export const SIGNALS2 = makeSignals(2)
-export const SIGNALS3 = makeSignals(3)
-export const SIGNALS6 = makeSignals(6)
+export const prependSignals = (n: number, values: number[][]): number[][] => {
+  const extraSignals = makeSignals(n)
+
+  return values.flatMap(v => extraSignals.map(s => [...s, ...v]))
+}
 
 export const toPins = (prefix: string, value: number): Record<string, Signal> => {
   const pins: Record<string, Signal> = {}

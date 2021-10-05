@@ -1,12 +1,8 @@
-import { make2InBusInputValues, makeDeviceSpec, randomNumber16, wrap2In1Out16 } from '../utils'
-
-import _ from 'lodash'
+import { generateRandomNumbers16, make2InBusInputValues, makeDeviceSpec, wrap2In1Out16 } from '../utils'
 import { And16 } from '@/libsim/elements/logic/And16'
-
-const RANDOM_INPUT = _.times(50, () => [randomNumber16(1), randomNumber16()])
 
 makeDeviceSpec(
   And16,
   wrap2In1Out16((a, b) => a & b),
-  make2InBusInputValues(RANDOM_INPUT)
+  make2InBusInputValues(generateRandomNumbers16(50, 2))
 )

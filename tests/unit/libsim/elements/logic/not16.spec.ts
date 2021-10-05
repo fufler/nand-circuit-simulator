@@ -1,10 +1,6 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, make1InBusInputValues, makeDeviceSpec, randomNumber16, toPins } from '../utils'
-
-import _ from 'lodash'
+import { fromPins, generateRandomNumbers16, make1InBusInputValues, makeDeviceSpec, toPins } from '../utils'
 import { Not16 } from '@/libsim/elements/logic/Not16'
-
-const RANDOM_INPUT = _.times(50, randomNumber16)
 
 makeDeviceSpec(
   Not16,
@@ -13,5 +9,5 @@ makeDeviceSpec(
 
     return toPins('out-', 0xFFFFFFFF - a)
   },
-  make1InBusInputValues(RANDOM_INPUT)
+  make1InBusInputValues(generateRandomNumbers16(50).flat())
 )

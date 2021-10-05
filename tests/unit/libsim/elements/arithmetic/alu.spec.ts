@@ -1,19 +1,19 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, makeDeviceSpec, makeInput, randomNumber16, SIGNALS6, toPins } from '../utils'
+import { fromPins, generateRandomNumbers16, makeDeviceSpec, makeInput, prependSignals, toPins } from '../utils'
 
 import _ from 'lodash'
 import { ALU } from '@/libsim/elements/arithmetic/ALU'
 
-const RANDOM_INPUT = _.times(50, () => [randomNumber16(1), randomNumber16(1)])
-
-const INPUT = [
-  [0, 0],
-  [65535, 1],
-  [2 ** 15, 0],
-  [0, 2 ** 15],
-  ...RANDOM_INPUT
-]
-  .flatMap(v => SIGNALS6.map(x => [...x, ...v]))
+const INPUT = prependSignals(
+  6,
+  [
+    [0, 0],
+    [65535, 1],
+    [2 ** 15, 0],
+    [0, 2 ** 15],
+    ...generateRandomNumbers16(50, 2)
+  ]
+)
 
 makeDeviceSpec(
   ALU,

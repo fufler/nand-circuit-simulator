@@ -1,15 +1,13 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, makeDeviceSpec, makeInput, randomNumber16, toPins } from '../utils'
+import { fromPins, generateRandomNumbers16, makeDeviceSpec, makeInput, prependSignals, toPins } from '../utils'
 
 import _ from 'lodash'
 import { Mux16 } from '@/libsim/elements/selectors/Mux16'
 
-const RANDOM_INPUT = _(50)
-  .times(() => [randomNumber16(), randomNumber16()])
-  .flatMap(values => [
-    [Signal.LOW, ...values],
-    [Signal.HIGH, ...values]
-  ])
+const RANDOM_INPUT = prependSignals(
+  1,
+  generateRandomNumbers16(50, 2)
+)
 
 makeDeviceSpec(
   Mux16,
