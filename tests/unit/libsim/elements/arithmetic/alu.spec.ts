@@ -18,28 +18,28 @@ const INPUT = prependSignals(
 makeDeviceSpec(
   ALU,
   (input: Record<string, Signal>) => {
-    let [x, y] = _.map(
-      ['inX-', 'inY-'],
+    let [a, b] = _.map(
+      ['inA-', 'inB-'],
       p => fromPins(input, p)
     )
 
     if (input.zx === Signal.HIGH) {
-      x = 0
+      a = 0
     }
 
     if (input.nx === Signal.HIGH) {
-      x = 65535 - x
+      a = 65535 - a
     }
 
     if (input.zy === Signal.HIGH) {
-      y = 0
+      b = 0
     }
 
     if (input.ny === Signal.HIGH) {
-      y = 65535 - y
+      b = 65535 - b
     }
 
-    let out = (input.f === Signal.HIGH ? x + y : x & y) % 65536
+    let out = (input.f === Signal.HIGH ? a + b : a & b) % 65536
 
     if (input.no === Signal.HIGH) {
       out = 65535 - out
@@ -53,7 +53,7 @@ makeDeviceSpec(
   },
   makeInput(
     ['zx', 'nx', 'zy', 'ny', 'f', 'no'],
-    ['inX', 'inY'],
+    ['inA', 'inB'],
     INPUT
   )
 )

@@ -9,8 +9,8 @@ import { Not } from '@/libsim/elements/logic/Not'
 import _ from 'lodash'
 
 export class ALU extends CompoundDevice {
-  readonly inX = this.makeInBus(16, 'inX')
-  readonly inY = this.makeInBus(16, 'inY')
+  readonly inA = this.makeInBus(16, 'inA')
+  readonly inB = this.makeInBus(16, 'inB')
   readonly out = this.makeOutBus(16, 'out')
 
   readonly zx = this.makeInPin('zx')
@@ -58,8 +58,8 @@ export class ALU extends CompoundDevice {
       this.zeroYMux.inB
     )
 
-    this.link(this.inX, this.zeroXMux.inA)
-    this.link(this.inY, this.zeroYMux.inA)
+    this.link(this.inA, this.zeroXMux.inA)
+    this.link(this.inB, this.zeroYMux.inA)
 
     this.link(this.zx, this.zeroXMux.sel)
     this.link(this.zy, this.zeroYMux.sel)
