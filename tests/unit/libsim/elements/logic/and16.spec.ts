@@ -1,19 +1,12 @@
-import { Signal } from '@/libsim/Pins'
-import { fromPins, makeDeviceSpec, randomNumber16, toPins } from '../utils'
+import { make2InBusInputValues, makeDeviceSpec, randomNumber16, wrap2In1Out16 } from '../utils'
 
 import _ from 'lodash'
 import { And16 } from '@/libsim/elements/logic/And16'
 
 const RANDOM_INPUT = _.times(50, () => [randomNumber16(1), randomNumber16()])
 
-makeDeviceSpec(And16, (input: Record<string, Signal>) => {
-  const [a, b] = _.map(
-    ['inA-', 'inB-'],
-    p => fromPins(input, p)
-  )
-
-  return toPins('out-', a & b)
-}, RANDOM_INPUT.map(([a, b]) => ({
-  ...toPins('inA-', a),
-  ...toPins('inB-', b)
-})))
+makeDeviceSpec(
+  And16,
+  wrap2In1Out16((a, b) => a & b),
+  make2InBusInputValues(RANDOM_INPUT)
+)

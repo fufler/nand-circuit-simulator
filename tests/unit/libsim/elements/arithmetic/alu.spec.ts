@@ -1,5 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, makeDeviceSpec, randomNumber16, SIGNALS6, toPins } from '../utils'
+import { fromPins, makeDeviceSpec, makeInput, randomNumber16, SIGNALS6, toPins } from '../utils'
 
 import _ from 'lodash'
 import { ALU } from '@/libsim/elements/arithmetic/ALU'
@@ -15,46 +15,45 @@ const INPUT = [
 ]
   .flatMap(v => SIGNALS6.map(x => [...x, ...v]))
 
-makeDeviceSpec(ALU, (input: Record<string, Signal>) => {
-  let [x, y] = _.map(
-    ['inX-', 'inY-'],
-    p => fromPins(input, p)
+makeDeviceSpec(
+  ALU,
+  (input: Record<string, Signal>) => {
+    let [x, y] = _.map(
+      ['inX-', 'inY-'],
+      p => fromPins(input, p)
+    )
+
+    if (input.zx === Signal.HIGH) {
+      x = 0
+    }
+
+    if (input.nx === Signal.HIGH) {
+      x = 65535 - x
+    }
+
+    if (input.zy === Signal.HIGH) {
+      y = 0
+    }
+
+    if (input.ny === Signal.HIGH) {
+      y = 65535 - y
+    }
+
+    let out = (input.f === Signal.HIGH ? x + y : x & y) % 65536
+
+    if (input.no === Signal.HIGH) {
+      out = 65535 - out
+    }
+
+    return {
+      zr: out === 0 ? Signal.HIGH : Signal.LOW,
+      ng: out >= 2 ** 15 ? Signal.HIGH : Signal.LOW,
+      ...toPins('out-', out)
+    }
+  },
+  makeInput(
+    ['zx', 'nx', 'zy', 'ny', 'f', 'no'],
+    ['inX', 'inY'],
+    INPUT
   )
-
-  if (input.zx === Signal.HIGH) {
-    x = 0
-  }
-
-  if (input.nx === Signal.HIGH) {
-    x = 65535 - x
-  }
-
-  if (input.zy === Signal.HIGH) {
-    y = 0
-  }
-
-  if (input.ny === Signal.HIGH) {
-    y = 65535 - y
-  }
-
-  let out = (input.f === Signal.HIGH ? x + y : x & y) % 65536
-
-  if (input.no === Signal.HIGH) {
-    out = 65535 - out
-  }
-
-  return {
-    zr: out === 0 ? Signal.HIGH : Signal.LOW,
-    ng: out >= 2 ** 15 ? Signal.HIGH : Signal.LOW,
-    ...toPins('out-', out)
-  }
-}, INPUT.map(([zx, nx, zy, ny, f, no, a, b]) => ({
-  zx,
-  nx,
-  zy,
-  ny,
-  f,
-  no,
-  ...toPins('inX-', a),
-  ...toPins('inY-', b)
-})))
+)

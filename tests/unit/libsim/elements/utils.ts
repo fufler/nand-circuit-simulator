@@ -8,6 +8,7 @@ import _ from 'lodash'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DeviceImplementationFunction = (input: any) => any
 type Device2In1OutImplementationFunction = (inA: Signal, inB: Signal) => Signal
+type Device2In1Out16ImplementationFunction = (inA: number, inB: number) => number
 type MultiPinSignals = Array<Array<Signal>>
 type NamedMultiPinSignal = Record<string, Signal>
 type NamedMultiPinSignals = Array<NamedMultiPinSignal>
@@ -43,6 +44,21 @@ export const toPins = (prefix: string, value: number): Record<string, Signal> =>
 
   return pins
 }
+
+export const makeInput = (pins: string[], buses: string[], values: number[][] | number[]): NamedMultiPinSignals => {
+  const _values = <number[][]>(Array.isArray(values[0]) ? values : (<number[]>values).map(v => [v]))
+
+  return _values.map(v =>
+    Object.assign(
+      {},
+      ..._.map(pins, (p, idx) => ({ [p]: v[idx] })),
+      ..._.map(buses, (b, idx) => toPins(`${b}-`, v[pins.length + idx]))
+    )
+  )
+}
+
+export const make2InBusInputValues = (values: number[][]): NamedMultiPinSignals => makeInput([], ['inA', 'inB'], values)
+export const make1InBusInputValues = (values: number[]): NamedMultiPinSignals => makeInput([], ['in'], values)
 
 export const fromPins = (pins: Record<string, Signal>, prefix: string): number => _(pins)
   .toPairs()
@@ -100,6 +116,15 @@ export const wrap2In1Out = (impl: Device2In1OutImplementationFunction): DeviceIm
     inA,
     inB
   }) => ({ out: impl(inA, inB) })
+
+export const wrap2In1Out16 = (impl: Device2In1Out16ImplementationFunction): DeviceImplementationFunction => input =>
+  toPins(
+    'out-',
+    impl(
+      fromPins(input, 'inA-'),
+      fromPins(input, 'inB-')
+    )
+  )
 
 export function makeDeviceSpec<T extends Device> (ctor: DeviceConstructor<T>, impl: DeviceImplementationFunction, customSignals?: NamedMultiPinSignals): void {
   describe(ctor.name, () => {
