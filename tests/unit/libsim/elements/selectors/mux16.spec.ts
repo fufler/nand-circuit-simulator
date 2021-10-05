@@ -1,7 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, generateRandomNumbers16, makeDeviceSpec, makeInput, prependSignals, toPins } from '../utils'
-
-import _ from 'lodash'
+import { generateRandomNumbers16, makeDeviceSpec, makeInput, prependSignals, wrapBuses } from '../utils'
 import { Mux16 } from '@/libsim/elements/selectors/Mux16'
 
 const RANDOM_INPUT = prependSignals(
@@ -11,13 +9,13 @@ const RANDOM_INPUT = prependSignals(
 
 makeDeviceSpec(
   Mux16,
-  (input: Record<string, Signal>) => {
-    const [a, b] = _.map(
-      ['inA-', 'inB-'],
-      p => fromPins(input, p)
-    )
-
-    return toPins('out-', input.sel === Signal.LOW ? a : b)
-  },
+  wrapBuses(({
+    inA,
+    inB
+  }, { sel }) => ({
+    buses: {
+      out: sel === Signal.LOW ? inA : inB
+    }
+  })),
   makeInput(['sel'], ['inA', 'inB'], RANDOM_INPUT)
 )

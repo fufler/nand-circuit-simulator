@@ -1,14 +1,14 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, makeDeviceSpec } from '../utils'
+import { makeDeviceSpec, wrapBuses } from '../utils'
 
 import _ from 'lodash'
 import { DMux8Way } from '@/libsim/elements/selectors/DMux8Way'
 
-makeDeviceSpec(DMux8Way, (input) => {
-  const sel = fromPins(input, 'sel-')
-
-  return _(['outA', 'outB', 'outC', 'outD', 'outE', 'outF', 'outG', 'outH'])
-    .map((p, idx) => [p, idx === sel ? input.in : Signal.LOW])
+makeDeviceSpec(
+  DMux8Way,
+  wrapBuses(buses => _(['outA', 'outB', 'outC', 'outD', 'outE', 'outF', 'outG', 'outH'])
+    .map((p, idx) => [p, idx === buses.sel ? buses.in : Signal.LOW])
     .fromPairs()
     .value()
-})
+  )
+)

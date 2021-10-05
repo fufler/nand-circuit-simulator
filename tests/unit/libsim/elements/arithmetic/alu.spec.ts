@@ -1,7 +1,5 @@
 import { Signal } from '@/libsim/Pins'
-import { fromPins, generateRandomNumbers16, makeDeviceSpec, makeInput, prependSignals, toPins } from '../utils'
-
-import _ from 'lodash'
+import { generateRandomNumbers16, makeDeviceSpec, makeInput, prependSignals, wrapBuses } from '../utils'
 import { ALU } from '@/libsim/elements/arithmetic/ALU'
 
 const INPUT = prependSignals(
@@ -17,40 +15,47 @@ const INPUT = prependSignals(
 
 makeDeviceSpec(
   ALU,
-  (input: Record<string, Signal>) => {
-    let [a, b] = _.map(
-      ['inA-', 'inB-'],
-      p => fromPins(input, p)
-    )
-
-    if (input.zx === Signal.HIGH) {
-      a = 0
+  wrapBuses(({
+    inA,
+    inB
+  }, {
+    zx,
+    nx,
+    zy,
+    ny,
+    f,
+    no
+  }) => {
+    if (zx === Signal.HIGH) {
+      inA = 0
     }
 
-    if (input.nx === Signal.HIGH) {
-      a = 65535 - a
+    if (nx === Signal.HIGH) {
+      inA = 65535 - inA
     }
 
-    if (input.zy === Signal.HIGH) {
-      b = 0
+    if (zy === Signal.HIGH) {
+      inB = 0
     }
 
-    if (input.ny === Signal.HIGH) {
-      b = 65535 - b
+    if (ny === Signal.HIGH) {
+      inB = 65535 - inB
     }
 
-    let out = (input.f === Signal.HIGH ? a + b : a & b) % 65536
+    let out = (f === Signal.HIGH ? inA + inB : inA & inB) % 65536
 
-    if (input.no === Signal.HIGH) {
+    if (no === Signal.HIGH) {
       out = 65535 - out
     }
 
     return {
-      zr: out === 0 ? Signal.HIGH : Signal.LOW,
-      ng: out >= 2 ** 15 ? Signal.HIGH : Signal.LOW,
-      ...toPins('out-', out)
+      buses: { out },
+      pins: {
+        zr: out === 0 ? Signal.HIGH : Signal.LOW,
+        ng: out >= 2 ** 15 ? Signal.HIGH : Signal.LOW
+      }
     }
-  },
+  }),
   makeInput(
     ['zx', 'nx', 'zy', 'ny', 'f', 'no'],
     ['inA', 'inB'],

@@ -12,6 +12,7 @@ type Device2In1Out16ImplementationFunction = (inA: number, inB: number) => numbe
 type MultiPinSignals = Array<Array<Signal>>
 type NamedMultiPinSignal = Record<string, Signal>
 type NamedMultiPinSignals = Array<NamedMultiPinSignal>
+type BusesAwareDeviceImplementation = (buses: Record<string, number>, pins: NamedMultiPinSignal) => { buses?: Record<string, number>, pins?: Record<string, Signal> }
 
 export const randomNumber8 = (start = 0): number => start + Math.ceil(Math.random() * (255 - start))
 export const randomNumber16 = (start = 0): number => start + Math.ceil(Math.random() * (65535 - start))
@@ -124,6 +125,27 @@ export const wrap2In1Out = (impl: Device2In1OutImplementationFunction): DeviceIm
     inA,
     inB
   }) => ({ out: impl(inA, inB) })
+
+export const wrapBuses = (impl: BusesAwareDeviceImplementation): DeviceImplementationFunction => input => {
+  const buses: Record<string, number> = _(input)
+    .keys()
+    .filter(p => p.indexOf('-') !== -1)
+    .map(b => b.substring(0, b.indexOf('-')))
+    .map(b => [b, fromPins(input, b + '-')])
+    .fromPairs()
+    .value()
+
+  const result = impl(buses, input)
+
+  return {
+    ..._(result.buses)
+      .toPairs()
+      .flatMap(([b, v]) => _.toPairs(toPins(b + '-', v)))
+      .fromPairs()
+      .value(),
+    ...result.pins
+  }
+}
 
 export const wrap2In1Out16 = (impl: Device2In1Out16ImplementationFunction): DeviceImplementationFunction => input =>
   toPins(
