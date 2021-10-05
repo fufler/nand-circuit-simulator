@@ -4,7 +4,7 @@
       v-show="editDefinitionMode"
       class="definition"
     >
-      <textarea v-model="definition" />
+      <textarea v-model="definition"/>
       <button
         @click="loadDefinition"
       >
@@ -52,90 +52,79 @@ import coseBilkent from 'cytoscape-cose-bilkent'
 import cytoscapeDagre from 'cytoscape-dagre'
 import { Engine } from '@/libsim/Engine'
 import { Device, DevicePart } from '@/libsim/Devices'
-import { And } from '@/libsim/elements/logic/And'
-import { Or } from '@/libsim/elements/logic/Or'
-import { Not } from '@/libsim/elements/logic/Not'
 import { CircuitElement } from '@/libsim/CircuitElement'
 import { Pin, Signal } from '@/libsim/Pins'
 
+import _ from 'lodash'
+import { ALU } from '@/libsim/elements/arithmetic/ALU'
+
+const pins = [
+  ..._(16).times(n => ({
+    id: `inA-${n}`,
+    name: `inA-${n}`,
+    signal: n === 15 ? Signal.HIGH : Signal.LOW
+  })),
+  ..._(16).times(n => ({
+    id: `inB-${n}`,
+    name: `inB-${n}`,
+    signal: n === 10 ? Signal.HIGH : Signal.LOW
+  })),
+  {
+    id: 'f',
+    name: 'f',
+    signal: Signal.HIGH
+  },
+  {
+    id: 'zx',
+    name: 'zx',
+    signal: Signal.LOW
+  },
+  {
+    id: 'nx',
+    name: 'nx',
+    signal: Signal.LOW
+  },
+  {
+    id: 'zy',
+    name: 'zy',
+    signal: Signal.LOW
+  },
+  {
+    id: 'ny',
+    name: 'ny',
+    signal: Signal.LOW
+  },
+  {
+    id: 'no',
+    name: 'no',
+    signal: Signal.HIGH
+  }
+]
+
 const defaultCircuitDefinition: CircuitDefinition = {
   pins: [
-    {
-      id: 'src-a',
-      name: 'srcA',
-      signal: Signal.LOW
-    },
-    {
-      id: 'src-b',
-      name: 'srcB',
-      signal: Signal.HIGH
-    },
-    {
-      id: 'src-c',
-      name: 'srcC',
-      signal: Signal.HIGH
-    },
-    {
-      id: 'src-d',
-      name: 'srcD',
-      signal: Signal.LOW
-    },
-    {
-      id: 'dst',
-      name: 'dst'
-    }
+    ...pins,
+    ..._.times(16, n => ({
+      id: `dst-${n}`,
+      name: `dst-${n}`
+    }))
   ],
+
   devices: [
     {
-      type: 'And',
-      id: 'and-a-b'
-    },
-    {
-      type: 'Not',
-      id: 'not-d'
-    },
-    {
-      type: 'And',
-      id: 'and-c-d'
-    },
-    {
-      type: 'Or',
-      id: 'or'
+      type: 'ALU',
+      id: 'alu'
     }
   ],
   links: [
-    {
-      srcId: 'src-a',
-      dstId: 'and-a-b.inA'
-    },
-    {
-      srcId: 'src-b',
-      dstId: 'and-a-b.inB'
-    },
-    {
-      srcId: 'src-c',
-      dstId: 'and-c-d.inA'
-    },
-    {
-      srcId: 'src-d',
-      dstId: 'not-d.in'
-    },
-    {
-      srcId: 'not-d.out',
-      dstId: 'and-c-d.inB'
-    },
-    {
-      srcId: 'and-a-b.out',
-      dstId: 'or.inA'
-    },
-    {
-      srcId: 'and-c-d.out',
-      dstId: 'or.inB'
-    },
-    {
-      srcId: 'or.out',
-      dstId: 'dst'
-    }
+    ...pins.map(p => ({
+      srcId: p.id,
+      dstId: `alu.${p.id}`
+    })),
+    ..._.times(16, n => ({
+      srcId: `alu.out-${n}`,
+      dstId: `dst-${n}`
+    }))
   ]
 }
 
@@ -154,6 +143,10 @@ interface CustomThis$Options {
 class CustomCyLayoutOptions implements BaseLayoutOptions {
   name = 'dagre'
   nodeDimensionsIncludeLabels = true
+  fit = false
+  rankSep = 200
+  nodeSep = 50
+  edgeSep = 50
 }
 
 export default Vue.extend({
@@ -164,7 +157,7 @@ export default Vue.extend({
       definition: JSON.stringify(defaultCircuitDefinition, null, 2),
       editDefinitionMode: true,
       graphDisplayDepth: '1',
-      simulationInterval: '100'
+      simulationInterval: '10'
     }
   },
 
@@ -214,9 +207,7 @@ export default Vue.extend({
   methods: {
     loadDefinition (): void {
       const engine = (this.$options as CustomThis$Options).engine = new Engine()
-      engine.registerDeviceConstructor(And, 'And')
-      engine.registerDeviceConstructor(Or, 'Or')
-      engine.registerDeviceConstructor(Not, 'Not')
+      engine.registerDeviceConstructor(ALU, 'ALU')
 
       const def = parseDefinitionString(this.definition)
       engine.loadDefinition(def)
@@ -330,8 +321,12 @@ export default Vue.extend({
             return false
           }
 
-          options.cy.startBatch()
           const cyEl = options.cy.getElementById(e.id)
+
+          if (cyEl.size() === 0) {
+            return false
+          }
+
           cyEl.removeClass(['high-signal', 'low-signal'])
 
           const signal = e.getSignal()
@@ -340,11 +335,10 @@ export default Vue.extend({
             cyEl.addClass(signal === Signal.LOW ? 'low-signal' : 'high-signal')
           }
 
-          options.cy.endBatch()
-
           return true
         },
-        parseInt(this.simulationInterval, 10)
+        parseInt(this.simulationInterval, 10),
+        100000
       )
     }
   }
@@ -374,7 +368,7 @@ export default Vue.extend({
       width: 100%;
     }
 
-    > button  {
+    > button {
       align-self: flex-end;
     }
   }
